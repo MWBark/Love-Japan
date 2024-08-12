@@ -1,6 +1,9 @@
 from django.shortcuts import render
+from django.views import generic
+from .models import ImagePost
 
 
 # Create your views here.
-def home_page(request):
-    return render(request, "main/index.html")
+class ImagePostList(generic.ListView):
+    queryset = ImagePost.objects.all()
+    template_name = "main/index.html"
