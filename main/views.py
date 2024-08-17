@@ -7,3 +7,4 @@ from .models import ImagePost
 class ImagePostList(generic.ListView):
     queryset = ImagePost.objects.all()
     template_name = "main/index.html"
+    paginate_by = 8
