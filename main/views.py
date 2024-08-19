@@ -5,7 +5,11 @@ from .models import ImagePost
 
 # Create your views here.
 class ImagePostList(generic.ListView):
-    queryset = ImagePost.objects.all()
+    """
+    Uses django's generic.Listview to filter approved imageposts
+    and to paginate posts by 8 per page.
+    """
+    queryset = ImagePost.objects.filter(status=1)
     template_name = "main/index.html"
     paginate_by = 8
 
