@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from .models import ImagePost
+from .models import ImagePost, Profile
 
 
 # Create your views here.
@@ -30,3 +30,9 @@ def imagepost(request, slug):
     queryset = ImagePost.objects.filter(status=1)
     imagepost = get_object_or_404(queryset, slug=slug)
     return render(request, 'main/imagepost.html', {"imagepost":imagepost})
+
+
+def profile(request, pk):
+    profile = Profile.objects.get(user_id=pk)
+
+    return render(request, 'main/profile.html', {"profile":profile})
