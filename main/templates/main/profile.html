@@ -1,11 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
 <div class="card mb-3">
     <div class="row g-0 justify-content-center">
         <div class="col-md-4">
-            <img src="..." class="img-fluid rounded-start" alt="...">
+            <img {% if "placeholder" in profile.image.url %}
+            src="{% static 'images/placeholder.jpg' %}"
+              alt="placeholder image"
+            {% else %}
+            src=" {{ profile.image.url }}"
+              alt="{{ profile.user.username }}'s profile pic"
+            {% endif %}>
         </div>
         <div class="col-md-6">
             <div class="card-body">
