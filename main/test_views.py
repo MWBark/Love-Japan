@@ -28,6 +28,7 @@ class TestMainViews(TestCase):
     def test_render_homepage(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
+        self.assertIn(b"image title", response.content)
 
     
     def test_render_imagepost(self):
@@ -45,3 +46,9 @@ class TestMainViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"myUsername", response.content)
         self.assertIn(b"something about me", response.content)
+
+    def test_render_profile_posts_page(self):
+        response = self.client.get(reverse(
+            'profile-posts', args=["1"]))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"image title", response.content)
