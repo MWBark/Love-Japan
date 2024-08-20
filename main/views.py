@@ -34,5 +34,16 @@ def imagepost(request, slug):
 
 def profile(request, pk):
     profile = Profile.objects.get(user_id=pk)
+    profile_images = ImagePost.objects.filter(uploader=pk)
 
-    return render(request, 'main/profile.html', {"profile":profile})
+    return render(request, 'main/profile.html', {"profile":profile, "profile_images":profile_images})
+
+
+class ProfilePostList(generic.ListView):
+    queryset = ImagePost.objects.all()
+    template_name = "main/index.html"
+    paginate_by = 8
+
+    def get_queryset(self):
+        """return all ImagePosts by uploader==primary key"""
+        return ImagePost.objects.filter(uploader=self.kwargs.get('pk'))
