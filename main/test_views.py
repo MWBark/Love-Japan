@@ -10,9 +10,12 @@ class TestMainViews(TestCase):
     def setUp(self):
         self.user = User.objects.create_superuser(
         username="myUsername",
-        password="myPassword",
         email="test@test.com"
         )
+
+        self.user.set_password('12345')
+        self.user.save()
+
 
         self.imagepost = ImagePost(title="image title", uploader=self.user,
                                     slug="image-title", image="",
@@ -25,10 +28,18 @@ class TestMainViews(TestCase):
         profile.save()
         
 
-    def test_render_homepage(self):
+    def test_render_homepage_logged_out(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"image title", response.content)
+        self.assertIn(b"Login", response.content)
+
+
+    def test_render_homepage_logged_in(self):
+        self.client.login(username=self.user.username, password='12345')
+        response = self.client.get(reverse('home'))
+        self.assertIn(b"Logout", response.content)
+        self.assertIn(b"navbar-brand", response.content)
 
     
     def test_render_imagepost(self):
