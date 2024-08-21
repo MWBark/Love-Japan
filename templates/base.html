@@ -1,3 +1,5 @@
+{% load static %}
+
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
@@ -33,6 +35,17 @@
                             <a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
                                 href="{% url 'account_logout' %}">Logout</a>
                         </li>
+                    </ul>
+                    <a class="navbar-brand" href="{% url 'profile' request.user.id %}">
+                        <img {% if "placeholder" in user.profile.image.url %}
+                            src="{% static 'images/placeholder.jpg' %}"
+                            alt="placeholder image"
+                            {% else %}
+                            src=" {{ user.profile.image.url }}"
+                            alt="{{ user.username }}'s profile pic"
+                            {% endif %} class="img-thumbnail"
+                             width="30" height="24">
+                    </a>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == signup_url %}active" aria-current="page{% endif %}"
@@ -42,8 +55,8 @@
                             <a class="nav-link {% if request.path == login_url %}active" aria-current="page{% endif %}"
                                 href="{% url 'account_login' %}">Login</a>
                         </li>
+                    </ul>
                     {% endif %}
-                </ul>
             </div>
         </div>
     </nav>
