@@ -1,6 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, reverse, get_object_or_404
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.views import generic
 from .models import ImagePost, Profile
+from .forms import ProfileForm
 
 
 # Create your views here.
@@ -35,8 +38,25 @@ def imagepost(request, slug):
 def profile(request, pk):
     profile = Profile.objects.get(user_id=pk)
     profile_images = ImagePost.objects.filter(uploader=pk)
+    profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
 
-    return render(request, 'main/profile.html', {"profile":profile, "profile_images":profile_images})
+    if request.method == "POST":
+        if profile_form.is_valid() and profile.user == request.user:
+            profile_form.save()
+            messages.success(request, ("Your Profile Has Been Updated!"))
+            return HttpResponseRedirect(reverse('profile', args=[pk]))
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating profile image!')
+
+    return render(
+        request, 
+        'main/profile.html', 
+        {
+            "profile":profile, 
+            "profile_images":profile_images, 
+            "profile_form":profile_form
+        }
+    )
 
 
 class ProfilePostList(generic.ListView):

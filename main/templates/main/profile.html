@@ -6,13 +6,9 @@
 <div class="card mb-3">
     <div class="row g-0 justify-content-center">
         <div class="col-md-4">
-            <img {% if "placeholder" in profile.image.url %}
-            src="{% static 'images/placeholder.jpg' %}"
-              alt="placeholder image"
-            {% else %}
-            src=" {{ profile.image.url }}"
-              alt="{{ profile.user.username }}'s profile pic"
-            {% endif %}>
+                <img {% if "placeholder" in profile.image.url %} src="{% static 'images/placeholder.jpg' %}"
+                    alt="placeholder image" {% else %} src=" {{ profile.image.url }}"
+                    alt="{{ profile.user.username }}'s profile pic" {% endif %} class="img-fluid">
         </div>
         <div class="col-md-6">
             <div class="card-body">
@@ -22,9 +18,15 @@
                 </p>
                 <p class="card-text">
                     <small class="text-body-secondary">
-                        Joined {{ profile.user.date_joined }}
+                        Joined {{ profile.user.date_joined }} <br>
+                        Last Logged in {{ profile.user.last_login }}
                     </small>
                 </p>
+                {% if profile.user.id == request.user.id %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#ProfileUpdateModal">
+                        Edit Profile
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -32,20 +34,39 @@
 <div class="row">
     <div class="col-lg-2">
         {% for imagepost in profile_images|slice:"6" %}
-            <a href="{% url 'imagepost' imagepost.slug %}">
-                <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
-                    class="w-100 shadow-1-strong rounded mb-4 ">
-            </a>
-            {% if forloop.last %}
-            {% elif forloop.counter|divisibleby:2 %}
-                </div>
-                <div class="col-lg-2">
-            {% endif %}
+        <a href="{% url 'imagepost' imagepost.slug %}">
+            <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
+                class="w-100 shadow-1-strong rounded mb-4 ">
+        </a>
+        {% if forloop.last %}
+        {% elif forloop.counter|divisibleby:2 %}
+    </div>
+    <div class="col-lg-2">
+        {% endif %}
         {% endfor %}
     </div>
     <a href="{% url 'profile-posts' profile.user_id %}">
         <p>Show all</p>
     </a>
+</div>
+
+<!-- Profile Update Modal -->
+<div class="modal fade" id="ProfileUpdateModal" tabindex="-1" aria-labelledby="ProfileUpdateLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ProfileUpdateLabel">Profile Update</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="profileImageForm" method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ profile_form.as_p }}
+                    <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
