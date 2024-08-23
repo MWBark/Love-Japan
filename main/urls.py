@@ -6,4 +6,5 @@ urlpatterns = [
     path('imagepost/<slug:slug>', views.imagepost, name='imagepost'),
     path('profile/<int:pk>', views.profile, name="profile"),
     path('profile/<int:pk>/imageposts', views.ProfilePostList.as_view(), name="profile-posts"),
+    path('uploadimage', views.upload_image, name="upload-image"),
 ]

@@ -1,9 +1,10 @@
-from django.shortcuts import render, reverse, get_object_or_404
+from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.utils.text import slugify
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from .models import ImagePost, Profile
-from .forms import ProfileForm
+from .forms import ProfileForm, UploadImageForm
 
 
 # Create your views here.
@@ -67,3 +68,20 @@ class ProfilePostList(generic.ListView):
     def get_queryset(self):
         """return all ImagePosts by uploader==primary key"""
         return ImagePost.objects.filter(uploader=self.kwargs.get('pk'))
+
+
+def upload_image(request):
+    upload_image_form = UploadImageForm(request.POST or None, request.FILES or None)
+
+    if request.method == "POST":
+        if upload_image_form.is_valid():
+            imagepost = upload_image_form.save(commit=False)
+            imagepost.uploader = request.user
+            imagepost.slug = slugify(imagepost.title)
+            imagepost.save()
+            messages.success(request, ("Your Image is awaiting approval."))
+            return redirect('home')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error uploading image!')
+
+    return render(request, 'main/uploadimage.html', {"upload_image_form":upload_image_form})

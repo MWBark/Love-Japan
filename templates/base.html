@@ -1,5 +1,6 @@
 {% load static %}
 
+{% url 'upload-image' as upload_image_url %}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
@@ -35,6 +36,10 @@
                             <a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
                                 href="{% url 'account_logout' %}">Logout</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == upload_image_url %}active" aria-current="page{% endif %}"
+                                href="{% url 'upload-image' %}">Upload Image</a>
+                        </li>
                     </ul>
                     <a class="navbar-brand" href="{% url 'profile' request.user.id %}">
                         <img {% if "placeholder" in user.profile.image.url %}
@@ -43,8 +48,8 @@
                             {% else %}
                             src=" {{ user.profile.image.url }}"
                             alt="{{ user.username }}'s profile pic"
-                            {% endif %} class="img-thumbnail"
-                             width="30" height="24">
+                            {% endif %} class="img-fluid rounded"
+                             width="30" height="30">
                     </a>
                     {% else %}
                         <li class="nav-item">
@@ -60,6 +65,20 @@
             </div>
         </div>
     </nav>
+
+    <!-- displaying Django messages -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible fade show" id="msg" role="alert">
+                    {{ message | safe }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
     {% block content %}
     <!-- Content Goes here -->
