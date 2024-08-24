@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.test import TestCase
 from .models import ImagePost, Profile, ImageComment
+from .forms import ImageCommentForm
 
 # Create your tests here.
 class TestMainViews(TestCase):
@@ -21,10 +22,6 @@ class TestMainViews(TestCase):
                                     slug="image-title", image="",
                                     message="message content", status=1)
         self.imagepost.save()
-
-        self.imagecomment = ImageComment(imagepost=self.imagepost, author=self.user,
-                                        body="Nice", status=1)
-        self.imagecomment.save()
 
         
         profile = get_object_or_404(Profile, user=self.user)
@@ -54,7 +51,27 @@ class TestMainViews(TestCase):
         self.assertIn(b"myUsername", response.content)
         self.assertIn(b"message content", response.content)
         self.assertIn(b"Created on", response.content)
-        self.assertIn(b"Nice", response.content)
+        self.assertIsInstance(
+            response.context['comment_form'], ImageCommentForm)
+
+    def test_successful_image_comment_submission(self):
+        """Test for posting a comment on a image post"""
+        self.client.login(
+            username="myUsername", password="12345")
+        post_data = {
+            'body': 'This is a test comment.'
+        }
+        response = self.client.post(reverse(
+            'imagepost', args=["image-title"]), post_data, follow=True)
+        self.assertRedirects(
+            response, (reverse('imagepost', args=["image-title"])),
+            status_code=302,
+            target_status_code=200,
+        )
+        self.assertIn(
+            b'Comment submitted and awaiting approval',
+            response.content
+        )
 
     def test_render_profilepage(self):
         response = self.client.get(reverse(
