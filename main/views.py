@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from .models import ImagePost, Profile, ImageComment
-from .forms import ProfileForm, UploadImageForm
+from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 
 
 # Create your views here.
@@ -36,13 +36,28 @@ def imagepost(request, slug):
     queryset = ImagePost.objects.filter(status=1)
     imagepost = get_object_or_404(queryset, slug=slug)
     image_comments = ImageComment.objects.filter(imagepost=imagepost).order_by("-created_on")
+
+    if request.method == "POST":
+        comment_form = ImageCommentForm(data=request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user
+            comment.imagepost = imagepost
+            comment.save()
+            messages.success(request, ('Comment submitted and awaiting approval'))
+            return HttpResponseRedirect(reverse('imagepost', args=[slug]))
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating profile image!')
+
+    comment_form = ImageCommentForm()
     
     return render(
         request,
         'main/imagepost.html',
         {
             "imagepost":imagepost,
-            "image_comments":image_comments
+            "image_comments":image_comments,
+            "comment_form":comment_form,
         }
     )
 
