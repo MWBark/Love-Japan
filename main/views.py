@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
-from .models import ImagePost, Profile
+from .models import ImagePost, Profile, ImageComment
 from .forms import ProfileForm, UploadImageForm
 
 
@@ -26,6 +26,8 @@ def imagepost(request, slug):
 
     ``imagepost``
         An instance of :model:`main.ImagePost`.
+    ``image_comments``
+        All comments related to imagepost
 
     **Template:**
 
@@ -33,7 +35,16 @@ def imagepost(request, slug):
     """
     queryset = ImagePost.objects.filter(status=1)
     imagepost = get_object_or_404(queryset, slug=slug)
-    return render(request, 'main/imagepost.html', {"imagepost":imagepost})
+    image_comments = ImageComment.objects.filter(imagepost=imagepost).order_by("-created_on")
+    
+    return render(
+        request,
+        'main/imagepost.html',
+        {
+            "imagepost":imagepost,
+            "image_comments":image_comments
+        }
+    )
 
 
 def profile(request, pk):
