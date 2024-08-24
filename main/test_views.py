@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.test import TestCase
-from .models import ImagePost, Profile
+from .models import ImagePost, Profile, ImageComment
 
 # Create your tests here.
 class TestMainViews(TestCase):
@@ -21,6 +21,10 @@ class TestMainViews(TestCase):
                                     slug="image-title", image="",
                                     message="message content", status=1)
         self.imagepost.save()
+
+        self.imagecomment = ImageComment(imagepost=self.imagepost, author=self.user,
+                                        body="Nice", status=1)
+        self.imagecomment.save()
 
         
         profile = get_object_or_404(Profile, user=self.user)
@@ -50,6 +54,7 @@ class TestMainViews(TestCase):
         self.assertIn(b"myUsername", response.content)
         self.assertIn(b"message content", response.content)
         self.assertIn(b"Created on", response.content)
+        self.assertIn(b"Nice", response.content)
 
     def test_render_profilepage(self):
         response = self.client.get(reverse(
