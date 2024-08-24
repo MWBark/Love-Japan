@@ -47,3 +47,25 @@ class ImagePost(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.uploader}"
+
+
+class ImageComment(models.Model):
+    """
+    Stores a single comment entry related to :model: `main.ImagePost`
+    and :model: `auth.User`.
+    """
+    imagepost = models.ForeignKey(
+        ImagePost, on_delete=models.CASCADE, related_name="comments"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="commenter"
+    )
+    body = models.TextField()
+    status = models.IntegerField(choices=STATUS, default=0)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_on"]
+
+    def __str__(self):
+        return f"Comment {self.body} by {self.author}"
