@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.test import TestCase
 from .models import ImagePost, Profile, ImageComment
-from .forms import ImageCommentForm
+from .forms import ImageCommentForm, ProfileForm
 
 # Create your tests here.
 class TestMainViews(TestCase):
@@ -85,3 +85,19 @@ class TestMainViews(TestCase):
             'profile-posts', args=["1"]))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"image title", response.content)
+
+    def test_profile_page_profile_form(self):
+        self.client.login(
+            username="myUsername", password="12345")
+        post_data = {
+            'bio': 'Changed my bio'
+        }
+        response = self.client.post(reverse(
+            'profile', args=["1"]), post_data, follow=True)
+        self.assertRedirects(
+            response, (reverse('profile', args=["1"])),
+            status_code=302,
+            target_status_code=200,
+        )
+        self.assertIn(b'Your Profile Has Been Updated!', response.content)
+        self.assertIn(b'Changed my bio', response.content)
