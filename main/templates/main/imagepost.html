@@ -1,6 +1,8 @@
-{% extends "base.html" %}
+{% extends 'base.html' %} 
+{% load static %}
 
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-8 card m-3">
         <img src="{{ imagepost.image.url }}" class="card-img-top mt-3" alt="{{ imagepost.title }}">
@@ -9,6 +11,7 @@
                     href="{% url 'profile' imagepost.uploader.id %}">{{ imagepost.uploader }}</a></h5>
             <p class="card-text">{{ imagepost.message }}</p>
             <p class="card-text"><small class="text-body-secondary">Created on {{ imagepost.created_on }}</small></p>
+            
         </div>
     </div>
 </div>
@@ -19,6 +22,7 @@
         <h3>Comments:</h3>
         <div class="card-body">
             {% for comment in image_comments %}
+            
             <div class="p-2
                         {% if comment.status == 0 and comment.author == user %}
                         faded{% elif comment.status == 0 %} d-none{% endif %}">
@@ -36,11 +40,14 @@
                     This comment is awaiting approval
                 </p>
                 {% endif %}
+                {% if user.is_authenticated and comment.author == user %}
+                    <button class="btn btn-edit" data-slug="{{ imagepost.slug }}" data-comment_id="{{ comment.id }}">Edit</button>
+                {% endif %}
             </div>
-            <!-- Our for loop ends here -->
             {% endfor %}
         </div>
     </div>
+    
     <!-- Creating New Comments -->
     <div class="col-md-4 card mb-4 mt-3">
         <div class="card-body">
@@ -58,4 +65,6 @@
         </div>
     </div>
 </div>
+
+<script src="{% static 'js/imagepost.js' %}"></script>
 {% endblock %}

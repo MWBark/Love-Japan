@@ -62,6 +62,38 @@ def imagepost(request, slug):
     )
 
 
+def comment_edit(request, slug, comment_id):
+    """
+    Allows an authorized user to edit thier :model:`main.comment`
+
+    **Content**
+
+    ``imagepost``
+        An instance of :model:`main.ImagePost`.
+    ``comment``
+        A single comment related to a post.
+    ``comment_form``
+        An instance of :form:`main.ImageCommentForm`.
+    """
+    if request.method == "POST":
+
+        queryset = ImagePost.objects.filter(status=1)
+        imagepost = get_object_or_404(queryset, slug=slug)
+        comment = get_object_or_404(ImageComment, pk=comment_id)
+        comment_form = ImageCommentForm(data=request.POST, instance=comment)
+
+        if comment_form.is_valid() and comment.author == request.user:
+            comment = comment_form.save(commit=False)
+            comment.imagepost = imagepost
+            comment.approved = False
+            comment.save()
+            messages.add_message(request, messages.SUCCESS, 'Comment Updated!')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating comment!')
+
+    return HttpResponseRedirect(reverse('imagepost', args=[slug]))
+
+
 def profile(request, pk):
     profile = Profile.objects.get(user_id=pk)
     profile_images = ImagePost.objects.filter(uploader=pk)
