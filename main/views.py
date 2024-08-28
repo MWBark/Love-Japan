@@ -62,6 +62,27 @@ def imagepost(request, slug):
     )
 
 
+def imagepost_edit(request, slug):
+
+    queryset = ImagePost.objects.all()
+    imagepost = get_object_or_404(queryset, slug=slug)
+    upload_image_form = UploadImageForm(request.POST or None, request.FILES or None, instance=imagepost)
+
+    if request.method == "POST":
+        if upload_image_form.is_valid():
+            imagepost = upload_image_form.save(commit=False)
+            imagepost.uploader = request.user
+            imagepost.slug = slugify(imagepost.title)
+            imagepost.status = 0
+            imagepost.save()
+            messages.success(request, ("Your Image has been update and is awaiting approval."))
+            return redirect('home')
+        else:
+            messages.add_message(request, messages.ERROR, 'Error uploading image!')
+
+    return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
+
+
 def comment_edit(request, slug, comment_id):
     """
     Allows an authorized user to edit thier :model:`main.comment`
