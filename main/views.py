@@ -115,6 +115,31 @@ def comment_edit(request, slug, comment_id):
     return HttpResponseRedirect(reverse('imagepost', args=[slug]))
 
 
+def comment_delete(request, slug, comment_id):
+    """
+    Delete an individual comment
+
+    **Content**
+
+    ``post``
+        An instance of :model:`main.ImagePost`.
+    ``comment``
+        A single image comment related to a image post.
+    """
+    queryset = ImagePost.objects.filter(status=1)
+    imagepost = get_object_or_404(queryset, slug=slug)
+    comment = get_object_or_404(ImageComment, pk=comment_id)
+
+    if comment.author == request.user:
+        comment.delete()
+        messages.add_message(request, messages.SUCCESS, 'Comment deleted!')
+    else:
+        messages.add_message(request, messages.ERROR, 'You can only delete your own comments!')
+
+    return HttpResponseRedirect(reverse('imagepost', args=[slug]))
+
+
+
 def profile(request, pk):
     profile = Profile.objects.get(user_id=pk)
     profile_images = ImagePost.objects.filter(uploader=pk)

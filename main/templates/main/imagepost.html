@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -14,7 +14,7 @@
             {% if imagepost.uploader == request.user %}
             <a href="{% url 'imagepost_edit' imagepost.slug %}">
                 <button class="btn btn-primary">Update</button>
-            {% endif %}
+                {% endif %}
             </a>
         </div>
     </div>
@@ -26,10 +26,10 @@
         <h3>Comments:</h3>
         <div class="card-body">
             {% for comment in image_comments %}
-            
+
             <div class="p-2
-                        {% if comment.status == 0 and comment.author == user %}
-                        faded{% elif comment.status == 0 %} d-none{% endif %}">
+                            {% if comment.status == 0 and comment.author == user %}
+                            opacity-50{% elif comment.status == 0 %} d-none{% endif %}">
                 <p class="font-weight-bold">
                     {{ comment.author }}
                     <span class="font-weight-normal">
@@ -45,13 +45,16 @@
                 </p>
                 {% endif %}
                 {% if user.is_authenticated and comment.author == user %}
-                    <button class="btn btn-edit" data-slug="{{ imagepost.slug }}" data-comment_id="{{ comment.id }}">Edit</button>
+                <button class="btn btn-primary btn-edit" data-slug="{{ imagepost.slug }}"
+                    data-comment_id="{{ comment.id }}">Edit</button>
+                <button class="btn btn-danger btn-delete" data-slug="{{ imagepost.slug }}"
+                    data-comment_id="{{ comment.id }}">Delete</button>
                 {% endif %}
-            </div>
+            </div> <br>
             {% endfor %}
         </div>
     </div>
-    
+
     <!-- Creating New Comments -->
     <div class="col-md-4 card mb-4 mt-3">
         <div class="card-body">
@@ -61,7 +64,7 @@
             <form id="imageCommentForm" method="post" style="margin-top: 1.3em;">
                 {% csrf_token %}
                 {{ comment_form }}
-                <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+                <button id="submitButton" type="submit" class="btn btn-primary btn-signup btn-lg">Submit</button>
             </form>
             {% else %}
             <p>Log in to leave a comment</p>
@@ -70,5 +73,28 @@
     </div>
 </div>
 
+<!-- Delete Comment confirmation modal -->
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCommentLabel">Delete comment?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete your comment?
+                This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="deleteCommentConfirm" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
 <script src="{% static 'js/imagepost.js' %}"></script>
 {% endblock %}
