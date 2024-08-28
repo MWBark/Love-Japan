@@ -34,8 +34,9 @@
             {% for comment in image_comments %}
 
             <div class="p-2
-                            {% if comment.status == 0 and comment.author == user %}
-                            opacity-50{% elif comment.status == 0 %} d-none{% endif %}">
+                        {% if comment.status == 0 and comment.author == user %}opacity-50
+                        {% elif comment.status == 0 %} d-none
+                        {% endif %}">
                 <p class="font-weight-bold">
                     {{ comment.author }}
                     <span class="font-weight-normal">
@@ -44,6 +45,14 @@
                 </p>
                 <div id="comment{{ comment.id }}">
                     {{ comment.body | linebreaks }}
+                </div>
+                <div>
+                    <p>
+                        <a href="{% url 'comment_like' imagepost.slug comment.id %}">
+                            {% if user in comment.likes.all %}Unlike {% else %}Like {% endif %}
+                        </a>
+                        <span>{{ comment.number_of_likes }}</span>
+                    </p>
                 </div>
                 {% if comment.status == 0 and comment.author == user %}
                 <p class="approval">

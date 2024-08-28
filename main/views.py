@@ -102,12 +102,15 @@ def imagepost_like(request, slug):
 
         if imagepost.likes.filter(id=request.user.id):
             imagepost.likes.remove(request.user)
+            messages.success(request, ("Removed like from image."))
         else:
             imagepost.likes.add(request.user)
+            messages.success(request, ("Added like to comment."))
 
         return HttpResponseRedirect(reverse('imagepost', args=[slug]))
     else:
         messages.add_message(request, messages.ERROR, 'You must be logged in to like.')
+        return redirect('imagepost', slug)
 
 
 
@@ -166,6 +169,25 @@ def comment_delete(request, slug, comment_id):
 
     return HttpResponseRedirect(reverse('imagepost', args=[slug]))
 
+
+def comment_like(request, slug, comment_id):
+
+    if request.user.is_authenticated:
+        queryset = ImagePost.objects.filter(status=1)
+        imagepost = get_object_or_404(queryset, slug=slug)
+        comment = get_object_or_404(ImageComment, pk=comment_id)
+
+        if comment.likes.filter(id=request.user.id):
+            comment.likes.remove(request.user)
+            messages.success(request, ("Removed like from comment."))
+        else:
+            comment.likes.add(request.user)
+            messages.success(request, ("Added like to comment."))
+
+        return HttpResponseRedirect(reverse('imagepost', args=[slug]))
+    else:
+        messages.add_message(request, messages.ERROR, 'You must be logged in to like.')
+        return redirect('imagepost', slug)
 
 
 def profile(request, pk):
