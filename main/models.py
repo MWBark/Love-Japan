@@ -41,6 +41,11 @@ class ImagePost(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
     updated_on = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, related_name="image_like", blank=True)
+
+    # Count likes
+    def number_of_likes(self):
+        return self.likes.count()
 
     class Meta:
         ordering = ["-created_on"]

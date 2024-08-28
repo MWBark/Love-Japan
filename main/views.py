@@ -95,6 +95,21 @@ def imagepost_delete(request, slug):
 
     return HttpResponseRedirect(reverse('home'))
 
+def imagepost_like(request, slug):
+    if request.user.is_authenticated:
+        queryset = ImagePost.objects.all()
+        imagepost = get_object_or_404(queryset, slug=slug)
+
+        if imagepost.likes.filter(id=request.user.id):
+            imagepost.likes.remove(request.user)
+        else:
+            imagepost.likes.add(request.user)
+
+        return HttpResponseRedirect(reverse('imagepost', args=[slug]))
+    else:
+        messages.add_message(request, messages.ERROR, 'You must be logged in to like.')
+
+
 
 def comment_edit(request, slug, comment_id):
     """

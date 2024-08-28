@@ -9,6 +9,11 @@
         <div class="card-body">
             <h5 class="card-title">{{ imagepost.title }} by <a
                     href="{% url 'profile' imagepost.uploader.id %}">{{ imagepost.uploader }}</a></h5>
+            <p>
+                <a href="{% url 'imagepost_like' imagepost.slug %}">
+                    {% if user in imagepost.likes.all %}Unlike {% else %}Like {% endif %}
+                </a>{{ imagepost.number_of_likes }}
+            </p>
             <p class="card-text">{{ imagepost.message }}</p>
             <p class="card-text"><small class="text-body-secondary">Created on {{ imagepost.created_on }}</small></p>
             {% if imagepost.uploader == request.user %}
