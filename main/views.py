@@ -82,6 +82,19 @@ def imagepost_edit(request, slug):
 
     return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
 
+def imagepost_delete(request, slug):
+
+    queryset = ImagePost.objects.all()
+    imagepost = get_object_or_404(queryset, slug=slug)
+
+    if imagepost.uploader == request.user:
+        imagepost.delete()
+        messages.add_message(request, messages.SUCCESS, 'Image deleted!')
+    else:
+        messages.add_message(request, messages.ERROR, 'You can only delete your own Images!')
+
+    return HttpResponseRedirect(reverse('home'))
+
 
 def comment_edit(request, slug, comment_id):
     """

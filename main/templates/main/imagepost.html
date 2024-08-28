@@ -14,8 +14,9 @@
             {% if imagepost.uploader == request.user %}
             <a href="{% url 'imagepost_edit' imagepost.slug %}">
                 <button class="btn btn-primary">Update</button>
-                {% endif %}
             </a>
+            <button class="btn btn-danger" id="image-delete">Delete</button>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -45,10 +46,8 @@
                 </p>
                 {% endif %}
                 {% if user.is_authenticated and comment.author == user %}
-                <button class="btn btn-primary btn-edit" data-slug="{{ imagepost.slug }}"
-                    data-comment_id="{{ comment.id }}">Edit</button>
-                <button class="btn btn-danger btn-delete" data-slug="{{ imagepost.slug }}"
-                    data-comment_id="{{ comment.id }}">Delete</button>
+                <button class="btn btn-primary btn-edit" data-comment_id="{{ comment.id }}">Edit</button>
+                <button class="btn btn-danger btn-comment-delete" data-comment_id="{{ comment.id }}">Delete</button>
                 {% endif %}
             </div> <br>
             {% endfor %}
@@ -73,21 +72,20 @@
     </div>
 </div>
 
-<!-- Delete Comment confirmation modal -->
-<div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteCommentLabel">Delete comment?</h5>
+                <h5 class="modal-title" id="deleteModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete your comment?
-                This action cannot be undone.
+                <p id="delete-message"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="deleteCommentConfirm" href="#" class="btn btn-danger">Delete</a>
+                <a id="deleteConfirm" href="#" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
