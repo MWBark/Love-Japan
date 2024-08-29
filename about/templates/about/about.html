@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-md-4 text-center">
+            <img {% if "placeholder" in about.image.url %}
+                src="{% static 'images/pexels-tomas-malik-793526-3408353.jpg' %}"
+                alt="placeholder image"
+            {% else %}
+                src=" {{ about.image.url }}"
+                alt="{{ about.title }}"
+            {% endif %} class="img-fluid">
+        </div>
+        <div class="col-12 col-md-8">
+            <h2>{{ about.title }}</h2>
+            {{ about.content | safe | linebreaks }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-right">
+          <p class="text-end"><em>Updated on: {{ about.updated_on }}</em></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
