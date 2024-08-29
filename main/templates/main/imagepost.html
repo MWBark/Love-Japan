@@ -15,6 +15,11 @@
                 </a>{{ imagepost.number_of_likes }}
             </p>
             <p class="card-text">{{ imagepost.message }}</p>
+            <p>tags: 
+                {% for tag in imagepost.tags.all %}
+                <span> {{ tag }} </span>
+                {% endfor %}
+            </p>
             <p class="card-text"><small class="text-body-secondary">Created on {{ imagepost.created_on }}</small></p>
             {% if imagepost.uploader == request.user %}
             <a href="{% url 'imagepost_edit' imagepost.slug %}">

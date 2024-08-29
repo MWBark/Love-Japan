@@ -13,7 +13,7 @@ class UploadImageForm(forms.ModelForm):
 
     class Meta:
         model = ImagePost
-        fields = ('title', 'image', 'message' )
+        fields = ('title', 'image', 'message', 'tags', )
 
 
 class ImageCommentForm(forms.ModelForm):

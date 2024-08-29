@@ -33,7 +33,7 @@ def imagepost(request, slug):
 
     :template:`main/imagepost.html`
     """
-    queryset = ImagePost.objects.filter(status=1)
+    queryset = ImagePost.objects.prefetch_related('tags').all()
     imagepost = get_object_or_404(queryset, slug=slug)
     image_comments = ImageComment.objects.filter(imagepost=imagepost).order_by("-created_on")
 
@@ -64,7 +64,7 @@ def imagepost(request, slug):
 
 def imagepost_edit(request, slug):
 
-    queryset = ImagePost.objects.all()
+    queryset = ImagePost.objects.prefetch_related('tags').all()
     imagepost = get_object_or_404(queryset, slug=slug)
     upload_image_form = UploadImageForm(request.POST or None, request.FILES or None, instance=imagepost)
 
@@ -75,6 +75,7 @@ def imagepost_edit(request, slug):
             imagepost.slug = slugify(imagepost.title)
             imagepost.status = 0
             imagepost.save()
+            upload_image_form.save_m2m()
             messages.success(request, ("Your Image has been update and is awaiting approval."))
             return redirect('home')
         else:
@@ -233,6 +234,7 @@ def upload_image(request):
             imagepost.uploader = request.user
             imagepost.slug = slugify(imagepost.title)
             imagepost.save()
+            upload_image_form.save_m2m()
             messages.success(request, ("Your Image is awaiting approval."))
             return redirect('home')
         else:

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from taggit.managers import TaggableManager
 
 STATUS = ((0, "Draft"), (1, "Approved"))
 
@@ -42,6 +43,7 @@ class ImagePost(models.Model):
     status = models.IntegerField(choices=STATUS, default=0)
     updated_on = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name="image_like", blank=True)
+    tags = TaggableManager()
 
     # Count likes
     def number_of_likes(self):
