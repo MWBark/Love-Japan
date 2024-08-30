@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
 from taggit.models import Tag
-from .models import ImagePost, Profile, ImageComment
+from .models import ImagePost, Profile, ImageComment, Notification
 from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 
 
@@ -253,3 +253,9 @@ def upload_image(request):
             messages.add_message(request, messages.ERROR, 'Error uploading image!')
 
     return render(request, 'main/uploadimage.html', {"upload_image_form":upload_image_form})
+
+def notifications(request):
+
+    notifications = Notification.objects.filter(user=request.user)
+
+    return render(request, 'main/notifications.html', {"notifications":notifications})

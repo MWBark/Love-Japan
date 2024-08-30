@@ -44,17 +44,19 @@
                                 href="{% url 'upload-image' %}">Upload Image</a>
                         </li>
                     </ul>
-                    {% if notifications %}
+                    {% if unread_notifications %}
                     <span class="navbar-text text-danger">
-                        {{ notifications.count }}&nbsp;
+                        {{ unread_notifications.count }}&nbsp;
                     </span>
                     {% endif %}
                     <span class="navbar-brand">
-                        <i class="fa-solid fa-bell"
-                            {% if notifications %}
-                            style="color: red;"
-                            {% endif %}>
-                        </i>
+                        <a href="{% url 'notifications' %}">
+                            <i class="fa-solid fa-bell"
+                                {% if unread_notifications %}
+                                style="color: red;"
+                                {% endif %}>
+                            </i>
+                        </a>
                     </span>
 
                     <a class="navbar-brand" href="{% url 'profile' request.user.id %}">
