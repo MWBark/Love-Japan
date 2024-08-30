@@ -81,3 +81,13 @@ class ImageComment(models.Model):
 
     def __str__(self):
         return f"Comment {self.body} by {self.author}"
+
+    
+class Notification(models.Model):
+    message = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'"{self.message}" sent to {self.user}'
