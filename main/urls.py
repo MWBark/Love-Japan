@@ -3,6 +3,7 @@ from django.urls import path
 
 urlpatterns = [
     path('', views.ImagePostList.as_view(), name='home'),
+    path('tag/<slug:slug>', views.TagPostList.as_view(), name='tag'),
     path('imagepost/<slug:slug>/', views.imagepost, name='imagepost'),
     path('imagepost/<slug:slug>/edit_comment/<int:comment_id>',
         views.comment_edit, name='comment_edit'),

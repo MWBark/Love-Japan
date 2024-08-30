@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
+from taggit.models import Tag
 from .models import ImagePost, Profile, ImageComment
 from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 
@@ -216,13 +217,24 @@ def profile(request, pk):
 
 
 class ProfilePostList(generic.ListView):
-    queryset = ImagePost.objects.all()
+    queryset = ImagePost.objects.filter(status=1)
     template_name = "main/index.html"
     paginate_by = 8
 
     def get_queryset(self):
         """return all ImagePosts by uploader==primary key"""
         return ImagePost.objects.filter(uploader=self.kwargs.get('pk'))
+
+
+class TagPostList(generic.ListView):
+    queryset = ImagePost.objects.filter(status=1)
+    template_name = "main/index.html"
+    paginate_by = 8
+
+    def get_queryset(self):
+        """return all ImagePosts by tags==tag"""
+        tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
+        return ImagePost.objects.filter(tags=tag)
 
 
 def upload_image(request):

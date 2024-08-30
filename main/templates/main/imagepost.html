@@ -17,7 +17,7 @@
             <p class="card-text">{{ imagepost.message }}</p>
             <p>tags: 
                 {% for tag in imagepost.tags.all %}
-                <span> {{ tag }} </span>
+                <span><a href="{% url 'tag' tag.slug %}">{{ tag }}</a></span>&nbsp;
                 {% endfor %}
             </p>
             <p class="card-text"><small class="text-body-secondary">Created on {{ imagepost.created_on }}</small></p>
