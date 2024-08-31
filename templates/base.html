@@ -1,9 +1,10 @@
 {% load static %}
 
-{% url 'upload-image' as upload_image_url %}
+{% url 'upload_image' as upload_image_url %}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
+{% url 'taglist' as tag_list_url %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +35,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == tag_list_url %}active" aria-current="page{% endif %}"
+                            href="{% url 'taglist' %}">Tags</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}"
@@ -41,7 +46,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == upload_image_url %}active" aria-current="page{% endif %}"
-                                href="{% url 'upload-image' %}">Upload Image</a>
+                                href="{% url 'upload_image' %}">Upload Image</a>
                         </li>
                     </ul>
                     {% if unread_notifications %}

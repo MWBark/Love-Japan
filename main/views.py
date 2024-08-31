@@ -302,6 +302,25 @@ class TagPostList(generic.ListView):
         return ImagePost.objects.filter(tags=tag)
 
 
+def taglist(request):
+    """
+    Render list of all :model:`taggit.Tag`.
+
+    **Content**
+
+    ``tags``
+        all tags
+
+    **Templates**
+
+    :template:`main/tags.html`
+    """
+
+    tags = Tag.objects.all()
+
+    return render(request, 'main/tags.html', {"tags":tags})
+
+
 def upload_image(request):
     """
     Create a :model:`main.Imagepost`
