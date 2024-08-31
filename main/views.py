@@ -256,6 +256,21 @@ def upload_image(request):
 
 def notifications(request):
 
-    notifications = Notification.objects.filter(user=request.user)
+    read_notifications = Notification.objects.filter(user=request.user, is_read=True).order_by('-created_on')
 
-    return render(request, 'main/notifications.html', {"notifications":notifications})
+    return render(request, 'main/notifications.html', {"read_notifications":read_notifications})
+
+
+def notification_is_read(request, n_id):
+
+    queryset = Notification.objects.filter(is_read=False)
+    notification = get_object_or_404(queryset, pk=n_id)
+
+    if notification.user == request.user:
+        notification.is_read = True
+        notification.save()
+        messages.success(request, ("Notification marked as read."))
+        return HttpResponseRedirect(reverse('notifications'))
+    else:
+        messages.add_message(request, messages.ERROR, 'Error updating notification!')
+        return redirect('notifications')

@@ -18,4 +18,5 @@ urlpatterns = [
     path('profile/<int:pk>/imageposts', views.ProfilePostList.as_view(), name="profile-posts"),
     path('uploadimage', views.upload_image, name="upload-image"),
     path('notifications', views.notifications, name="notifications"),
+    path('notifications/<int:n_id>', views.notification_is_read, name="notification_is_read"),
 ]
