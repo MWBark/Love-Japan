@@ -48,7 +48,7 @@ def imagepost(request, slug):
             messages.success(request, ('Comment submitted and awaiting approval'))
             return HttpResponseRedirect(reverse('imagepost', args=[slug]))
         else:
-            messages.add_message(request, messages.ERROR, 'Error updating profile image!')
+            messages.error(request, 'Error updating profile image!')
 
     comment_form = ImageCommentForm()
     
@@ -80,7 +80,7 @@ def imagepost_edit(request, slug):
             messages.success(request, ("Your Image has been update and is awaiting approval."))
             return redirect('home')
         else:
-            messages.add_message(request, messages.ERROR, 'Error uploading image!')
+            messages.error(request, 'Error uploading image!')
 
     return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
 
@@ -91,9 +91,9 @@ def imagepost_delete(request, slug):
 
     if imagepost.uploader == request.user:
         imagepost.delete()
-        messages.add_message(request, messages.SUCCESS, 'Image deleted!')
+        messages.success(request, 'Image deleted!')
     else:
-        messages.add_message(request, messages.ERROR, 'You can only delete your own Images!')
+        messages.error(request, 'You can only delete your own Images!')
 
     return HttpResponseRedirect(reverse('home'))
 
@@ -111,7 +111,7 @@ def imagepost_like(request, slug):
 
         return HttpResponseRedirect(reverse('imagepost', args=[slug]))
     else:
-        messages.add_message(request, messages.ERROR, 'You must be logged in to like.')
+        messages.error(request, 'You must be logged in to like.')
         return redirect('imagepost', slug)
 
 
@@ -141,9 +141,9 @@ def comment_edit(request, slug, comment_id):
             comment.imagepost = imagepost
             comment.approved = False
             comment.save()
-            messages.add_message(request, messages.SUCCESS, 'Comment Updated!')
+            messages.success(request, 'Comment Updated!')
         else:
-            messages.add_message(request, messages.ERROR, 'Error updating comment!')
+            messages.error(request, 'Error updating comment!')
 
     return HttpResponseRedirect(reverse('imagepost', args=[slug]))
 
@@ -165,9 +165,9 @@ def comment_delete(request, slug, comment_id):
 
     if comment.author == request.user:
         comment.delete()
-        messages.add_message(request, messages.SUCCESS, 'Comment deleted!')
+        messages.success(request, 'Comment deleted!')
     else:
-        messages.add_message(request, messages.ERROR, 'You can only delete your own comments!')
+        messages.error(request, 'You can only delete your own comments!')
 
     return HttpResponseRedirect(reverse('imagepost', args=[slug]))
 
@@ -188,7 +188,7 @@ def comment_like(request, slug, comment_id):
 
         return HttpResponseRedirect(reverse('imagepost', args=[slug]))
     else:
-        messages.add_message(request, messages.ERROR, 'You must be logged in to like.')
+        messages.error(request, 'You must be logged in to like.')
         return redirect('imagepost', slug)
 
 
@@ -203,7 +203,7 @@ def profile(request, pk):
             messages.success(request, ("Your Profile Has Been Updated!"))
             return HttpResponseRedirect(reverse('profile', args=[pk]))
         else:
-            messages.add_message(request, messages.ERROR, 'Error updating profile image!')
+            messages.error(request, 'Error updating profile image!')
 
     return render(
         request, 
@@ -250,7 +250,7 @@ def upload_image(request):
             messages.success(request, ("Your Image is awaiting approval."))
             return redirect('home')
         else:
-            messages.add_message(request, messages.ERROR, 'Error uploading image!')
+            messages.error(request, 'Error uploading image!')
 
     return render(request, 'main/uploadimage.html', {"upload_image_form":upload_image_form})
 
@@ -272,5 +272,5 @@ def notification_is_read(request, n_id):
         messages.success(request, ("Notification marked as read."))
         return HttpResponseRedirect(reverse('notifications'))
     else:
-        messages.add_message(request, messages.ERROR, 'Error updating notification!')
+        messages.error(request, 'Error updating notification!')
         return redirect('notifications')
