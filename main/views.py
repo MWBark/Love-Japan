@@ -64,6 +64,20 @@ def imagepost(request, slug):
 
 
 def imagepost_edit(request, slug):
+    """
+    Edit an individual :model:`main.ImagePost`.
+
+    **Context**
+
+    ``imagepost``
+        An instance of :model:`main.ImagePost`.
+    ``upload_image_form``
+        An instance of :form:`main.UploadImageForm`.
+
+    **Template:**
+
+    :template:`main/uploadimage.html`
+    """
 
     queryset = ImagePost.objects.prefetch_related('tags').all()
     imagepost = get_object_or_404(queryset, slug=slug)
@@ -85,6 +99,14 @@ def imagepost_edit(request, slug):
     return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
 
 def imagepost_delete(request, slug):
+    """
+    Delete an individual :model:`main.ImagePost`.
+
+    **Context**
+
+    ``imagepost``
+        An instance of :model:`main.ImagePost`.
+    """
 
     queryset = ImagePost.objects.all()
     imagepost = get_object_or_404(queryset, slug=slug)
@@ -98,6 +120,15 @@ def imagepost_delete(request, slug):
     return HttpResponseRedirect(reverse('home'))
 
 def imagepost_like(request, slug):
+    """
+    Add or remove request :model:`auth.User` to
+    the 'likes' attribute of :model:`main.ImagePost`
+
+    **Context**
+
+    ``imagepost``
+        An instance of :model:`main.ImagePost`.
+    """
     if request.user.is_authenticated:
         queryset = ImagePost.objects.all()
         imagepost = get_object_or_404(queryset, slug=slug)
@@ -118,7 +149,7 @@ def imagepost_like(request, slug):
 
 def comment_edit(request, slug, comment_id):
     """
-    Allows an authorized user to edit thier :model:`main.comment`
+    Allows an authorized user to edit thier :model:`main.ImageComment`
 
     **Content**
 
@@ -150,11 +181,11 @@ def comment_edit(request, slug, comment_id):
 
 def comment_delete(request, slug, comment_id):
     """
-    Delete an individual comment
+    Delete an individual :model:`main.ImageComment`
 
     **Content**
 
-    ``post``
+    ``imagepost``
         An instance of :model:`main.ImagePost`.
     ``comment``
         A single image comment related to a image post.
@@ -173,7 +204,17 @@ def comment_delete(request, slug, comment_id):
 
 
 def comment_like(request, slug, comment_id):
+    """
+    Add or remove request :model:`auth.User` to
+    the 'likes' attribute of :model:`main.ImageComment`
 
+    **Content**
+
+    ``imagepost``
+        An instance of :model:`main.ImagePost`.
+    ``comment``
+        A single image comment related to a image post.
+    """
     if request.user.is_authenticated:
         queryset = ImagePost.objects.filter(status=1)
         imagepost = get_object_or_404(queryset, slug=slug)
@@ -193,6 +234,22 @@ def comment_like(request, slug, comment_id):
 
 
 def profile(request, pk):
+    """
+    Page related to a registered user's :model:`main.Profile`.
+
+    **Content**
+
+    ``profile``
+        An instance of :model:`main.Profile`.
+    ``profile_images``
+        All :model:`main.ImagePosts`related to profile.
+    ``profile_form``
+        An instance of :form:`main.ProfileForm`.
+
+    **Templates**
+
+    :template:`main/profile.html`
+    """
     profile = Profile.objects.get(user_id=pk)
     profile_images = ImagePost.objects.filter(uploader=pk)
     profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
@@ -217,6 +274,10 @@ def profile(request, pk):
 
 
 class ProfilePostList(generic.ListView):
+    """
+    Uses django's generic.Listview to filter approved imageposts
+    related to a user profile and to paginate posts by 8 per page.
+    """
     queryset = ImagePost.objects.filter(status=1)
     template_name = "main/index.html"
     paginate_by = 8
@@ -227,6 +288,10 @@ class ProfilePostList(generic.ListView):
 
 
 class TagPostList(generic.ListView):
+    """
+    Uses django's generic.Listview to filter approved imageposts
+    related to a :model:`taggit.Tag` and to paginate posts by 8 per page.
+    """
     queryset = ImagePost.objects.filter(status=1)
     template_name = "main/index.html"
     paginate_by = 8
@@ -238,6 +303,18 @@ class TagPostList(generic.ListView):
 
 
 def upload_image(request):
+    """
+    Create a :model:`main.Imagepost`
+
+    **content**
+
+    ``upload_image_form``
+        an instance of :form:`main.UploadImageForm`.
+
+    **Templates**
+
+    :template:`main/uploadimage.html.html`
+    """
     upload_image_form = UploadImageForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST":
@@ -255,6 +332,20 @@ def upload_image(request):
     return render(request, 'main/uploadimage.html', {"upload_image_form":upload_image_form})
 
 def notifications(request):
+    """
+    Gets all :model:`main.Notification` related to
+    request user where its attribute is_read = True
+    and orders newest first
+
+    **Content**
+
+    ``read_notifications``
+        all notifications related to user where is_read=True
+
+    **Templates**
+
+    :template:`main/notifications.html`.
+    """
 
     read_notifications = Notification.objects.filter(user=request.user, is_read=True).order_by('-created_on')
 
@@ -262,7 +353,14 @@ def notifications(request):
 
 
 def notification_is_read(request, n_id):
+    """
+    Sets :model:`main.Notification` attribute is_read = True
 
+    **Content**
+
+    ``notification``
+        instance of :model:`main.Notification` 
+    """
     queryset = Notification.objects.filter(is_read=False)
     notification = get_object_or_404(queryset, pk=n_id)
 

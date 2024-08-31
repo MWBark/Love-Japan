@@ -84,6 +84,9 @@ class ImageComment(models.Model):
 
     
 class Notification(models.Model):
+    """
+    Stores a single notification related to :model: `auth.User`.
+    """
     message = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)

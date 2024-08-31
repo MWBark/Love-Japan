@@ -30,6 +30,7 @@ class TestMainViews(TestCase):
         
 
     def test_render_homepage_logged_out(self):
+        """Test successful render of homepage without login"""
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"image title", response.content)
@@ -37,6 +38,7 @@ class TestMainViews(TestCase):
 
 
     def test_render_homepage_logged_in(self):
+        """Test for successful login"""
         self.client.login(username=self.user.username, password='12345')
         response = self.client.get(reverse('home'))
         self.assertIn(b"Logout", response.content)
@@ -44,6 +46,7 @@ class TestMainViews(TestCase):
 
     
     def test_render_imagepost(self):
+        """Test for successful render of an image post page"""
         response = self.client.get(reverse(
             'imagepost', args=['image-title']))
         self.assertEqual(response.status_code, 200)
@@ -55,7 +58,7 @@ class TestMainViews(TestCase):
             response.context['comment_form'], ImageCommentForm)
 
     def test_successful_image_comment_submission(self):
-        """Test for posting a comment on a image post"""
+        """Test for posting a comment on an image post"""
         self.client.login(
             username="myUsername", password="12345")
         post_data = {
@@ -74,6 +77,7 @@ class TestMainViews(TestCase):
         )
 
     def test_render_profilepage(self):
+        """Test for succesful render of a profile page"""
         response = self.client.get(reverse(
             'profile', args=["1"]))
         self.assertEqual(response.status_code, 200)
@@ -81,12 +85,14 @@ class TestMainViews(TestCase):
         self.assertIn(b"something about me", response.content)
 
     def test_render_profile_posts_page(self):
+        """Test for successful render of profile's image post page"""
         response = self.client.get(reverse(
             'profile-posts', args=["1"]))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"image title", response.content)
 
     def test_profile_page_profile_form(self):
+        """Test for successful update of profile"""
         self.client.login(
             username="myUsername", password="12345")
         post_data = {
