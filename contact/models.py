@@ -13,3 +13,16 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+class ContactMessage(models.Model):
+    """
+    Stores a single contact message.
+    """
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    username = models.CharField(max_length=200, blank=True)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Contact message from {self.name}"
