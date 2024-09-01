@@ -48,7 +48,7 @@ def imagepost(request, slug):
             messages.success(request, ('Comment submitted and awaiting approval'))
             return HttpResponseRedirect(reverse('imagepost', args=[slug]))
         else:
-            messages.error(request, 'Error updating profile image!')
+            messages.error(request, 'Error uploading comment!')
 
     comment_form = ImageCommentForm()
     
@@ -94,7 +94,7 @@ def imagepost_edit(request, slug):
             messages.success(request, ("Your Image has been update and is awaiting approval."))
             return redirect('home')
         else:
-            messages.error(request, 'Error uploading image!')
+            messages.error(request, 'Error updating image!')
 
     return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
 

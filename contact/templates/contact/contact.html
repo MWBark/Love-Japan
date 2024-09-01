@@ -23,5 +23,14 @@
           <p class="text-start"><em>Updated on: {{ contact_info.updated_on }}</em></p>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 my-5">
+            <form id="contactForm" method="post" style="margin-top: 1.3em;">
+                {{ contact_form.as_p }}
+                {% csrf_token %}
+                <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
