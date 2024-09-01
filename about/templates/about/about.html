@@ -8,10 +8,10 @@
             <img {% if "placeholder" in about.image.url %}
                 src="{% static 'images/pexels-tomas-malik-793526-3408353.jpg' %}"
                 alt="placeholder image"
-            {% else %}
-                src=" {{ about.image.url }}"
-                alt="{{ about.title }}"
-            {% endif %} class="img-fluid">
+                {% else %}
+                    src=" {{ about.image.url }}"
+                    alt="{{ about.title }}"
+                {% endif %} class="img-fluid">
         </div>
         <div class="col-12 col-md-8">
             <h2>{{ about.title }}</h2>

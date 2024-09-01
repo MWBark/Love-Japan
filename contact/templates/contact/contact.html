@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <h2>{{ contact_info.title }}</h2>
+            {{ contact_info.content | safe | linebreaks }}
+        </div>
+        <div class="col-12 col-md-4 text-center">
+            <img {% if "placeholder" in contact_info.image.url %}
+                src="{% static 'images/pexels-tomas-malik-793526-3408353.jpg' %}"
+                alt="placeholder image"
+            {% else %}
+                src=" {{ contact_info.image.url }}"
+                alt="{{ contact_info.title }}"
+            {% endif %} class="img-fluid">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-left">
+          <p class="text-start"><em>Updated on: {{ contact_info.updated_on }}</em></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
