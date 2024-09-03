@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.utils.text import slugify
+from django.core.paginator import Paginator
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -391,3 +392,19 @@ def notification_is_read(request, n_id):
     else:
         messages.error(request, 'Error updating notification!')
         return redirect('notifications')
+
+
+def search(request):
+
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        search_slug = slugify(searched)
+        imageposts = ImagePost.objects.filter(slug__contains=search_slug)
+        paginator = Paginator(imageposts, 8)  # Show 8 contacts per page.
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'main/search.html', {"searched":searched, "imageposts":imageposts, "page_obj": page_obj})
+
+        

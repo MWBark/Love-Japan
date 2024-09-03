@@ -25,7 +25,7 @@
 
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-2">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'home' %}">Love Japan</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -49,11 +49,11 @@
                                 href="{% url 'upload_image' %}">Upload Image</a>
                         </li>
                     </ul>
-                    {% if unread_notifications %}
-                    <span class="navbar-text text-danger">
-                        {{ unread_notifications.count }}&nbsp;
-                    </span>
-                    {% endif %}
+                        {% if unread_notifications %}
+                        <span class="navbar-text text-danger">
+                            {{ unread_notifications.count }}&nbsp;
+                        </span>
+                        {% endif %}
                     <span class="navbar-brand">
                         <a href="{% url 'notifications' %}">
                             <i class="fa-solid fa-bell"
@@ -85,6 +85,11 @@
                         </li>
                     </ul>
                     {% endif %}
+                    <form class="d-flex" role="search" method="POST" action="{% url 'search' %}">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Search Image Title" aria-label="Search" name="searched">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
+                    </form>
             </div>
         </div>
     </nav>

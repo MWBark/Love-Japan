@@ -20,4 +20,5 @@ urlpatterns = [
     path('uploadimage', views.upload_image, name="upload_image"),
     path('notifications', views.notifications, name="notifications"),
     path('notifications/<int:n_id>', views.notification_is_read, name="notification_is_read"),
+    path('search', views.search, name="search"),
 ]
