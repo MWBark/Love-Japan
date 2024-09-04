@@ -251,7 +251,8 @@ def profile(request, pk):
 
     :template:`main/profile.html`
     """
-    profile = Profile.objects.get(user_id=pk)
+    queryset = Profile.objects.all()
+    profile = get_object_or_404(queryset, user_id=pk)
     profile_images = ImagePost.objects.filter(uploader=pk)
     profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
 
@@ -406,5 +407,22 @@ def search(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'main/search.html', {"searched":searched, "imageposts":imageposts, "page_obj": page_obj})
+
+
+def handler403(request, exception):
+    """Render custom :template:`main/403.html` for 403 error"""
+    return render(request, 'main/403.html', status=403)
+
+
+def handler404(request, exception):
+    """Render custom :template:`main/404.html` for 404 error"""
+    return render(request, 'main/404.html', status=404)
+
+
+def handler500(request):
+    """Render custom :template:`main/500.html` for 500 error"""
+    return render(request, 'main/500.html', status=500)
+
+
 
         
