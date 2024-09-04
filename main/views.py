@@ -4,12 +4,21 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
+from PIL import Image
 from taggit.models import Tag
 from .models import ImagePost, Profile, ImageComment, Notification
 from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 
 
-# Create your views here.
+def is_valid_image_pillow(file_name):
+    try:
+        with Image.open(file_name) as img:
+            img.verify()
+            return True
+    except (IOError, SyntaxError):
+        return False
+
+
 class ImagePostList(generic.ListView):
     """
     Uses django's generic.Listview to filter approved imageposts
@@ -86,13 +95,17 @@ def imagepost_edit(request, slug):
 
     if request.method == "POST":
         if upload_image_form.is_valid():
-            imagepost = upload_image_form.save(commit=False)
-            imagepost.uploader = request.user
-            imagepost.slug = slugify(imagepost.title)
-            imagepost.status = 0
-            imagepost.save()
-            upload_image_form.save_m2m()
-            messages.success(request, ("Your Image has been update and is awaiting approval."))
+            new_imagepost = upload_image_form.save(commit=False)
+            if is_valid_image_pillow(new_imagepost.image):
+                new_imagepost.uploader = request.user
+                new_imagepost.slug = slugify(imagepost.title)
+                new_imagepost.status = 0
+                new_imagepost.save()
+                upload_image_form.save_m2m()
+                messages.success(request, ("Your Image has been update and is awaiting approval."))
+            else:
+                messages.error(request, 'Not a valid image file!')
+                return redirect('imagepost_edit', slug)
             return redirect('home')
         else:
             messages.error(request, 'Error updating image!')
@@ -258,9 +271,14 @@ def profile(request, pk):
 
     if request.method == "POST":
         if profile_form.is_valid() and profile.user == request.user:
-            profile_form.save()
-            messages.success(request, ("Your Profile Has Been Updated!"))
-            return HttpResponseRedirect(reverse('profile', args=[pk]))
+            new_profile = profile_form.save(commit=False)
+            if is_valid_image_pillow(new_profile.image):
+                new_profile.save()
+                messages.success(request, ("Your Profile Has Been Updated!"))
+                return HttpResponseRedirect(reverse('profile', args=[pk]))
+            else:
+                messages.error(request, 'Not a valid image file!')
+                return redirect('profile', pk)
         else:
             messages.error(request, 'Error updating profile image!')
 
@@ -341,12 +359,16 @@ def upload_image(request):
     if request.method == "POST":
         if upload_image_form.is_valid():
             imagepost = upload_image_form.save(commit=False)
-            imagepost.uploader = request.user
-            imagepost.slug = slugify(imagepost.title)
-            imagepost.save()
-            upload_image_form.save_m2m()
-            messages.success(request, ("Your Image is awaiting approval."))
-            return redirect('home')
+            if is_valid_image_pillow(imagepost.image):
+                imagepost.uploader = request.user
+                imagepost.slug = slugify(imagepost.title)
+                imagepost.save()
+                upload_image_form.save_m2m()
+                messages.success(request, ("Your Image is awaiting approval."))
+                return redirect('home')
+            else:
+                messages.error(request, 'Not a valid image file!')
+                return redirect('upload_image')
         else:
             messages.error(request, 'Error uploading image!')
 
