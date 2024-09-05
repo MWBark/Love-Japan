@@ -418,8 +418,11 @@ def notifications(request):
 
     :template:`main/notifications.html`.
     """
-
-    read_notifications = Notification.objects.filter(user=request.user, is_read=True).order_by('-created_on')
+    if request.user.is_authenticated:
+        read_notifications = Notification.objects.filter(user=request.user, is_read=True).order_by('-created_on')
+    else:
+        messages.error(request, "You must be logged in to view notifications!")
+        return redirect('accounts/login')
 
     return render(request, 'main/notifications.html', {"read_notifications":read_notifications})
 
