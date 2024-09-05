@@ -270,7 +270,8 @@ def profile(request, pk):
     """
     queryset = Profile.objects.all()
     profile = get_object_or_404(queryset, user_id=pk)
-    profile_images = ImagePost.objects.filter(uploader=pk)
+    approved_images = ImagePost.objects.filter(uploader=pk, status=1)
+    draft_images = ImagePost.objects.filter(uploader=pk, status=0)
     profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
 
     if request.method == "POST":
@@ -291,7 +292,8 @@ def profile(request, pk):
         'main/profile.html', 
         {
             "profile":profile, 
-            "profile_images":profile_images, 
+            "approved_images":approved_images, 
+            "draft_images":draft_images,
             "profile_form":profile_form
         }
     )
@@ -308,7 +310,30 @@ class ProfilePostList(generic.ListView):
 
     def get_queryset(self):
         """return all ImagePosts by uploader==primary key"""
-        return ImagePost.objects.filter(uploader=self.kwargs.get('pk'))
+        return ImagePost.objects.filter(uploader=self.kwargs.get('pk'), status=1)
+
+
+def profile_drafts(request, pk):
+
+    profile = Profile.objects.get(user_id=pk)
+    if request.user == profile.user:
+        imagepost_list = ImagePost.objects.filter(uploader=profile.user, status=0)
+
+        paginator = Paginator(imagepost_list, 8)  # Show 8 images per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+    else:
+        messages.error(request, "You don't have permission to view this page")
+        return redirect('home')
+
+    return render(
+        request,
+        'main/index.html',
+        {
+            "imagepost_list":imagepost_list,
+            "page_obj":page_obj
+        }
+    )
 
 
 class TagPostList(generic.ListView):
