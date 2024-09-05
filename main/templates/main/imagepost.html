@@ -15,7 +15,7 @@
                 </a>{{ imagepost.number_of_likes }}
             </p>
             <p class="card-text">{{ imagepost.message }}</p>
-            <p>tags: 
+            <p>tags:
                 {% for tag in imagepost.tags.all %}
                 <span><a href="{% url 'tag' tag.slug %}">{{ tag }}</a></span>&nbsp;
                 {% endfor %}
@@ -37,38 +37,48 @@
         <h3>Comments:</h3>
         <div class="card-body">
             {% for comment in image_comments %}
-
-            <div class="p-2
-                        {% if comment.status == 0 and comment.author == user %}opacity-50
-                        {% elif comment.status == 0 %} d-none
-                        {% endif %}">
-                <p class="font-weight-bold">
-                    {{ comment.author }}
-                    <span class="font-weight-normal">
-                        {{ comment.created_on }}
-                    </span> wrote:
-                </p>
-                <div id="comment{{ comment.id }}">
-                    {{ comment.body | linebreaks }}
-                </div>
-                <div>
-                    <p>
-                        <a href="{% url 'comment_like' imagepost.slug comment.id %}">
-                            {% if user in comment.likes.all %}Unlike {% else %}Like {% endif %}
-                        </a>
-                        <span>{{ comment.number_of_likes }}</span>
-                    </p>
-                </div>
                 {% if comment.status == 0 and comment.author == user %}
-                <p class="approval">
-                    This comment is awaiting approval
-                </p>
+                <div class="p-2 opacity-75">
+                    <p class="font-weight-bold">
+                        {{ comment.author }}
+                        <span class="font-weight-normal">
+                            {{ comment.created_on }}
+                        </span> wrote:
+                    </p>
+                    <div id="comment{{ comment.id }}">
+                        {{ comment.body | linebreaks }}
+                    </div>
+                    <p>
+                        This comment is awaiting approval
+                    </p>
+                    <button class="btn btn-primary btn-edit" data-comment_id="{{ comment.id }}">Edit</button>
+                    <button class="btn btn-danger btn-comment-delete" data-comment_id="{{ comment.id }}">Delete</button>
+                </div> <br>
+                {% elif comment.status == 1 %}
+                <div class="p-2">
+                    <p class="font-weight-bold">
+                        {{ comment.author }}
+                        <span class="font-weight-normal">
+                            {{ comment.created_on }}
+                        </span> wrote:
+                    </p>
+                    <div id="comment{{ comment.id }}">
+                        {{ comment.body | linebreaks }}
+                    </div>
+                    <div>
+                        <p>
+                            <a href="{% url 'comment_like' imagepost.slug comment.id %}">
+                                {% if user in comment.likes.all %}Unlike {% else %}Like {% endif %}
+                            </a>
+                            <span>{{ comment.number_of_likes }}</span>
+                        </p>
+                    </div>
+                    {% if user.is_authenticated and comment.author == user %}
+                    <button class="btn btn-primary btn-edit" data-comment_id="{{ comment.id }}">Edit</button>
+                    <button class="btn btn-danger btn-comment-delete" data-comment_id="{{ comment.id }}">Delete</button>
+                    {% endif %}
+                </div> <br>
                 {% endif %}
-                {% if user.is_authenticated and comment.author == user %}
-                <button class="btn btn-primary btn-edit" data-comment_id="{{ comment.id }}">Edit</button>
-                <button class="btn btn-danger btn-comment-delete" data-comment_id="{{ comment.id }}">Delete</button>
-                {% endif %}
-            </div> <br>
             {% endfor %}
         </div>
     </div>
