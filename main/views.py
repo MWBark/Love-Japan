@@ -93,22 +93,26 @@ def imagepost_edit(request, slug):
     imagepost = get_object_or_404(queryset, slug=slug)
     upload_image_form = UploadImageForm(request.POST or None, request.FILES or None, instance=imagepost)
 
-    if request.method == "POST":
-        if upload_image_form.is_valid():
-            new_imagepost = upload_image_form.save(commit=False)
-            if is_valid_image_pillow(new_imagepost.image):
-                new_imagepost.uploader = request.user
-                new_imagepost.slug = slugify(imagepost.title)
-                new_imagepost.status = 0
-                new_imagepost.save()
-                upload_image_form.save_m2m()
-                messages.success(request, ("Your Image has been update and is awaiting approval."))
+    if request.user == imagepost.uploader:   
+        if request.method == "POST":
+            if upload_image_form.is_valid():
+                new_imagepost = upload_image_form.save(commit=False)
+                if is_valid_image_pillow(new_imagepost.image):
+                    new_imagepost.uploader = request.user
+                    new_imagepost.slug = slugify(imagepost.title)
+                    new_imagepost.status = 0
+                    new_imagepost.save()
+                    upload_image_form.save_m2m()
+                    messages.success(request, ("Your Image has been update and is awaiting approval."))
+                else:
+                    messages.error(request, 'Not a valid image file!')
+                    return redirect('imagepost_edit', slug)
+                return redirect('home')
             else:
-                messages.error(request, 'Not a valid image file!')
-                return redirect('imagepost_edit', slug)
-            return redirect('home')
-        else:
-            messages.error(request, 'Error updating image!')
+                messages.error(request, 'Error updating image!')
+    else:
+        messages.error(request, "You don't have permission to edit this post!")
+        return redirect('imagepost', slug)
 
     return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
 
