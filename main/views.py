@@ -97,17 +97,24 @@ def imagepost_edit(request, slug):
         if request.method == "POST":
             if upload_image_form.is_valid():
                 new_imagepost = upload_image_form.save(commit=False)
-                if is_valid_image_pillow(new_imagepost.image):
-                    new_imagepost.uploader = request.user
-                    new_imagepost.slug = slugify(imagepost.title)
-                    new_imagepost.status = 0
-                    new_imagepost.save()
-                    upload_image_form.save_m2m()
-                    messages.success(request, ("Your Image has been update and is awaiting approval."))
-                else:
+                my_bytesio = new_imagepost.image.file
+                image_size = my_bytesio.getbuffer().nbytes
+
+                if not is_valid_image_pillow(new_imagepost.image):
                     messages.error(request, 'Not a valid image file!')
                     return redirect('imagepost_edit', slug)
-                return redirect('home')
+
+                elif (image_size / 1048576) > 20 :
+                    messages.error(request, 'Image file to large!')
+                    return redirect('imagepost_edit', slug)
+                
+                new_imagepost.uploader = request.user
+                new_imagepost.slug = slugify(imagepost.title)
+                new_imagepost.status = 0
+                new_imagepost.save()
+                upload_image_form.save_m2m()
+                messages.success(request, ("Your Image has been update and is awaiting approval."))
+                return HttpResponseRedirect(reverse('home'))
             else:
                 messages.error(request, 'Error updating image!')
     else:
@@ -277,15 +284,22 @@ def profile(request, pk):
     if request.method == "POST":
         if profile_form.is_valid() and profile.user == request.user:
             new_profile = profile_form.save(commit=False)
-            if is_valid_image_pillow(new_profile.image):
-                new_profile.save()
-                messages.success(request, ("Your Profile Has Been Updated!"))
-                return HttpResponseRedirect(reverse('profile', args=[pk]))
-            else:
+            my_bytesio = new_profile.image.file
+            image_size = my_bytesio.getbuffer().nbytes
+
+            if not is_valid_image_pillow(new_profile.image):
                 messages.error(request, 'Not a valid image file!')
                 return redirect('profile', pk)
+
+            elif (image_size / 1048576) > 20 :
+                messages.error(request, 'Image file to large!')
+                return redirect('profile', pk)
+
+            new_profile.save()
+            messages.success(request, ("Your Profile Has Been Updated!"))
+            return HttpResponseRedirect(reverse('profile', args=[pk]))
         else:
-            messages.error(request, 'Error updating profile image!')
+            messages.error(request, 'Error updating profile!')
 
     return render(
         request, 
@@ -388,16 +402,24 @@ def upload_image(request):
     if request.method == "POST":
         if upload_image_form.is_valid():
             imagepost = upload_image_form.save(commit=False)
-            if is_valid_image_pillow(imagepost.image):
-                imagepost.uploader = request.user
-                imagepost.slug = slugify(imagepost.title)
-                imagepost.save()
-                upload_image_form.save_m2m()
-                messages.success(request, ("Your Image is awaiting approval."))
-                return redirect('home')
-            else:
+            my_bytesio = imagepost.image.file
+            image_size = my_bytesio.getbuffer().nbytes
+
+            if not is_valid_image_pillow(imagepost.image):
                 messages.error(request, 'Not a valid image file!')
                 return redirect('upload_image')
+
+            elif (image_size / 1048576) > 20 :
+                messages.error(request, 'Image file to large!')
+                return redirect('upload_image')
+
+            imagepost.uploader = request.user
+            imagepost.slug = slugify(imagepost.title)
+            imagepost.save()
+            upload_image_form.save_m2m()
+            messages.success(request, ("Your Image is awaiting approval."))
+            return HttpResponseRedirect(reverse('home'))
+            
         else:
             messages.error(request, 'Error uploading image!')
 
