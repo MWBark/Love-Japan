@@ -4,14 +4,15 @@
 {% block content %}
 
 <div class="row justify-content-center">
-    <div class="col-8 card m-3">
+    <div class="col-11 card mb-4">
         <img src="{{ imagepost.image.url }}" class="card-img-top mt-3" alt="{{ imagepost.title }}">
         <div class="card-body">
             <h5 class="card-title">{{ imagepost.title }} by <a
                     href="{% url 'profile' imagepost.uploader.id %}">{{ imagepost.uploader }}</a></h5>
             <p>
                 <a href="{% url 'imagepost_like' imagepost.slug %}">
-                    {% if user in imagepost.likes.all %}Unlike {% else %}Like {% endif %}
+                    {% if user in imagepost.likes.all %}<i class="fa-regular fa-thumbs-down"></i> {% else %}<i
+                        class="fa-regular fa-thumbs-up"></i> {% endif %}
                 </a>{{ imagepost.number_of_likes }}
             </p>
             <p class="card-text">{{ imagepost.message }}</p>
@@ -32,18 +33,18 @@
 </div>
 
 <!-- Displaying Comments -->
-<div class="row">
-    <div class="col-md-8 card mb-4  mt-3 ">
-        <h3>Comments:</h3>
+<div class="row justify-content-center">
+    <div class="col-sm-11 col-md-6 card mb-4 mt-3">
+        <h3 class="card-title p-3">Comments:</h3>
         <div class="card-body">
             {% for comment in image_comments %}
                 {% if comment.status == 0 and comment.author == user %}
-                <div class="p-2 opacity-75">
-                    <p class="font-weight-bold">
-                        {{ comment.author }}
-                        <span class="font-weight-normal">
+                <div class="card-text opacity-75">
+                    <p>
+                        <a href="{% url 'profile' comment.author.id %}">@{{ comment.author }}&nbsp</a>
+                        <span class="fw-light">
                             {{ comment.created_on }}
-                        </span> wrote:
+                        </span>
                     </p>
                     <div id="comment{{ comment.id }}">
                         {{ comment.body | linebreaks }}
@@ -55,12 +56,12 @@
                     <button class="btn btn-danger btn-comment-delete" data-comment_id="{{ comment.id }}">Delete</button>
                 </div> <br>
                 {% elif comment.status == 1 %}
-                <div class="p-2">
-                    <p class="font-weight-bold">
-                        {{ comment.author }}
-                        <span class="font-weight-normal">
+                <div class="card-text">
+                    <p>
+                        <a href="{% url 'profile' comment.author.id %}">@{{ comment.author }}&nbsp</a>
+                        <span class="fw-light">
                             {{ comment.created_on }}
-                        </span> wrote:
+                        </span>
                     </p>
                     <div id="comment{{ comment.id }}">
                         {{ comment.body | linebreaks }}
@@ -68,7 +69,8 @@
                     <div>
                         <p>
                             <a href="{% url 'comment_like' imagepost.slug comment.id %}">
-                                {% if user in comment.likes.all %}Unlike {% else %}Like {% endif %}
+                                {% if user in comment.likes.all %}<i class="fa-regular fa-thumbs-down"></i> {% else %}<i
+                                    class="fa-regular fa-thumbs-up"></i> {% endif %}
                             </a>
                             <span>{{ comment.number_of_likes }}</span>
                         </p>
@@ -84,14 +86,14 @@
     </div>
 
     <!-- Creating New Comments -->
-    <div class="col-md-4 card mb-4 mt-3">
+    <div class="col-sm-11 col-md-5 card mb-4 mt-3">
         <div class="card-body">
             {% if user.is_authenticated %}
             <h3>Leave a comment:</h3>
             <p>Posting as: {{ user.username }}</p>
             <form id="imageCommentForm" method="post" style="margin-top: 1.3em;">
                 {% csrf_token %}
-                {{ comment_form }}
+                {{ comment_form.as_p }}
                 <button id="submitButton" type="submit" class="btn btn-primary btn-signup btn-lg">Submit</button>
             </form>
             {% else %}
