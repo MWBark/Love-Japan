@@ -319,7 +319,7 @@ class ProfilePostList(generic.ListView):
     related to a user profile and to paginate posts by 8 per page.
     """
     queryset = ImagePost.objects.filter(status=1)
-    template_name = "main/index.html"
+    template_name = "main/imagelist.html"
     paginate_by = 8
 
     def get_queryset(self):
@@ -356,7 +356,7 @@ class TagPostList(generic.ListView):
     related to a :model:`taggit.Tag` and to paginate posts by 8 per page.
     """
     queryset = ImagePost.objects.filter(status=1)
-    template_name = "main/index.html"
+    template_name = "main/imagelist.html"
     paginate_by = 8
 
     def get_queryset(self):
@@ -476,13 +476,13 @@ def search(request):
     if request.method == 'POST':
         searched = request.POST['searched']
         search_slug = slugify(searched)
-        imageposts = ImagePost.objects.filter(slug__contains=search_slug)
-        paginator = Paginator(imageposts, 8)  # Show 8 contacts per page.
+        imagepost_list = ImagePost.objects.filter(slug__contains=search_slug)
+        paginator = Paginator(imagepost_list, 8)  # Show 8 contacts per page.
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'main/search.html', {"searched":searched, "imageposts":imageposts, "page_obj": page_obj})
+    return render(request, 'main/search.html', {"searched":searched, "imagepost_list":imagepost_list, "page_obj": page_obj})
 
 
 def handler403(request, exception):
