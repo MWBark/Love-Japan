@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row mt-3">
         <div class="col-12 col-md-4 text-center">
             <img {% if "placeholder" in about.image.url %}
                 src="{% static 'images/pexels-tomas-malik-793526-3408353.jpg' %}"
@@ -11,9 +11,10 @@
                 {% else %}
                     src=" {{ about.image.url }}"
                     alt="{{ about.title }}"
-                {% endif %} class="img-fluid">
+                {% endif %}
+                class="img-fluid" style="max-height: 70vh;">
         </div>
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-8 mt-4 px-4">
             <h2>{{ about.title }}</h2>
             {{ about.content | safe | linebreaks }}
         </div>
