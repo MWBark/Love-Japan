@@ -4,9 +4,12 @@
 
 {% if unread_notifications.count == 0 and read_notifications.count == 0 %}
 <div class="row justify-content-center align-content-center" style="height: 75vh;">
-    <div class="col-8 card m-3 text-center">
-        <div class="card-body">
-            <h1 class="card-title">No Messages Received</h1>
+    <div class="card col-sm-11 col-md-8 mb-5 py-4 waves border-info d-flex align-items-center justify-content-center"
+        style="height: 50vh;">
+        <div class="card text-bg-danger text-center">
+            <div class="card-body">
+                <h1 class="rounded card-title">No messages received</h1>
+            </div>
         </div>
     </div>
 </div>
