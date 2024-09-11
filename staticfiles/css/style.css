@@ -6,3 +6,7 @@ a:link {
     background-image: url("/static/images/waves-edit.webp");
     background-size: cover;
 }
+
+.no-border {
+    border: 0;
+}
