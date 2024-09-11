@@ -355,14 +355,13 @@ class TagPostList(generic.ListView):
     Uses django's generic.Listview to filter approved imageposts
     related to a :model:`taggit.Tag` and to paginate posts by 8 per page.
     """
-    queryset = ImagePost.objects.filter(status=1)
-    template_name = "main/imagelist.html"
+    template_name = "main/tagposts.html"
     paginate_by = 8
 
     def get_queryset(self):
         """return all ImagePosts by tags==tag"""
         tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
-        return ImagePost.objects.filter(tags=tag)
+        return ImagePost.objects.filter(tags=tag, status=1)
 
 
 def taglist(request):

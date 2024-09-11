@@ -1,0 +1,20 @@
+{% extends "main/imagelist.html" %}
+
+{% block title %}
+
+{% if imagepost_list.count == 0 %}
+<div class="row justify-content-center align-content-center" style="height: 75vh;">
+    <div class="card col-sm-11 col-md-8 mb-5 py-4 waves border-info d-flex align-items-center justify-content-center"
+        style="height: 50vh;">
+        <div class="card text-bg-danger text-center">
+            <div class="card-body">
+                <h1 class="rounded card-title">No approved images with Tag</h1>
+                <hr>
+                <p class="card-text">Draft images with this tag yet to be approved.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

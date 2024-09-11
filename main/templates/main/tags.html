@@ -1,15 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center">
-    {% for tag in tags %}
-    <div class="card col-lg-3 col-md-4 col-sm-6 mt-3" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title text-center">
-                <a href="{% url 'tag' tag.slug %}">{{ tag }}</a>
-            </h5>
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+        {% for tag in tags %}
+        <div class="card col-sm-6 col-md-4 mb-3 py-4 waves border-info
+            d-flex align-items-center justify-content-center">
+            <a href="{% url 'tag' tag.slug %}">
+                <div class="card text-bg-danger text-center">
+                    <div class="card-body">
+                        <h1 class="rounded card-title">{{ tag }}</h1>
+                    </div>
+                </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
 </div>
 {% endblock %}
