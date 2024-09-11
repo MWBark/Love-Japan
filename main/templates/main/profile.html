@@ -3,82 +3,84 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
-    <div class=" col-10 card mb-4">
-        <div class="row g-0">
-            <div class="col-md-5">
-                <img {% if "placeholder" in profile.image.url %} src="{% static 'images/placeholder.jpg' %}"
-                    alt="placeholder image" {% else %} src=" {{ profile.image.url }}"
-                    alt="{{ profile.user.username }}'s profile pic" {% endif %} class="img-fluid mt-3 mb-3 rounded">
-            </div>
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h1 class="card-title">{{ profile.user.username }}</h5>
-                        <p class="card-text">
-                            {{ profile.bio }}
-                        </p>
-                        <p class="card-text">
-                            <small class="text-body-secondary">
-                                Joined {{ profile.user.date_joined }} <br>
-                                Last Logged in {{ profile.user.last_login }}
-                            </small>
-                        </p>
-                        {% if profile.user.id == request.user.id %}
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#ProfileUpdateModal">
-                            Edit Profile
-                        </button>
-                        {% endif %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class=" col-10 card mb-4">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <img {% if "placeholder" in profile.image.url %} src="{% static 'images/placeholder.jpg' %}"
+                        alt="placeholder image" {% else %} src=" {{ profile.image.url }}"
+                        alt="{{ profile.user.username }}'s profile pic" {% endif %} class="img-fluid mt-3 mb-3 rounded">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ profile.user.username }}</h5>
+                            <p class="card-text">
+                                {{ profile.bio }}
+                            </p>
+                            <p class="card-text">
+                                <small class="text-body-secondary">
+                                    Joined {{ profile.user.date_joined }} <br>
+                                    Last Logged in {{ profile.user.last_login }}
+                                </small>
+                            </p>
+                            {% if profile.user.id == request.user.id %}
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#ProfileUpdateModal">
+                                Edit Profile
+                            </button>
+                            {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Approved Images -->
-<h2 class="mb-4">{{ profile.user.username }}'s Images</h1>
+    <!-- Approved Images -->
+    <h2 class="mb-4">{{ profile.user.username }}'s Images</h2>
 
-<div class="row">
-    {% for imagepost in approved_images|slice:"6" %}
-    <div class="col-sm-6 col-md-2">
-        <a href="{% url 'imagepost' imagepost.slug %}">
-            <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
-                class="w-100 shadow-1-strong rounded mb-4 ">
-        </a>
-        {% if forloop.last %}
-            {% if forloop.counter == 6 %}
-            <a href="{% url 'profile_posts' profile.user_id %}">
-                <p>Show all</p>
+    <div class="row">
+        {% for imagepost in approved_images|slice:"6" %}
+        <div class="col-sm-6 col-md-2">
+            <a href="{% url 'imagepost' imagepost.slug %}">
+                <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
+                    class="w-100 shadow-1-strong rounded mb-4 ">
             </a>
+            {% if forloop.last %}
+                {% if forloop.counter == 6 %}
+                <a href="{% url 'profile_posts' profile.user_id %}">
+                    <p>Show all</p>
+                </a>
+                {% endif %}
             {% endif %}
-        {% endif %}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 
-<!-- Draft Images -->
-{% if request.user == profile.user %}
-<h2 class="mb-4">{{ profile.user.username }}'s Drafts</h1>
+    <!-- Draft Images -->
+    {% if request.user == profile.user %}
+    <h2 class="mb-4">{{ profile.user.username }}'s Drafts</h2>
 
-<div class="row">
-    {% for imagepost in draft_images|slice:"6" %}
-    <div class="col-sm-6 col-md-2">
-        <a href="{% url 'imagepost' imagepost.slug %}">
-            <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
-                class="w-100 shadow-1-strong rounded mb-4 ">
-        </a>
-        {% if forloop.last %}
-            {% if forloop.counter == 6 %}
-            <a href="{% url 'profile_drafts' profile.user_id %}">
-                <p>Show all</p>
+    <div class="row">
+        {% for imagepost in draft_images|slice:"6" %}
+        <div class="col-sm-6 col-md-2">
+            <a href="{% url 'imagepost' imagepost.slug %}">
+                <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
+                    class="w-100 shadow-1-strong rounded mb-4 ">
             </a>
+            {% if forloop.last %}
+                {% if forloop.counter == 6 %}
+                <a href="{% url 'profile_drafts' profile.user_id %}">
+                    <p>Show all</p>
+                </a>
+                {% endif %}
             {% endif %}
-        {% endif %}
-    </div>
-    {% endfor %}
+        </div>
+        {% endfor %}
 
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <!-- Profile Update Modal -->
 <div class="modal fade" id="ProfileUpdateModal" tabindex="-1" aria-labelledby="ProfileUpdateLabel" aria-hidden="true">
