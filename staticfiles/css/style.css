@@ -1,3 +1,8 @@
 a:link { 
     text-decoration: none; 
 }
+
+.waves {
+    background-image: url("/static/images/waves-edit.webp");
+    background-size: cover;
+}

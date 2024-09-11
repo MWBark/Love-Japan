@@ -1,67 +1,28 @@
-{% extends "base.html" %}
+{% extends "main/imagelist.html" %}
 
-{% block content %}
+{% block title %}
 
 <div class="container-fluid">
-{% if searched %}
-    <h1>You searched for {{ searched }}</h1>
-    <br>
-    {% if imageposts.count == 0 %}
-    <h1>No results found</h1>
-    {% else %}
-        <div class="row">
-            <div class="col-lg-3 col-md-12 mb-4 mb-lg-0 min-vh-100">
-                {% for imagepost in page_obj %}
-                    <a href="{% url 'imagepost' imagepost.slug %}">
-                        <img src="{{ imagepost.image.url }}" alt="{{ imagepost.title }}"
-                            class="w-100 shadow-1-strong rounded mb-4 ">
-                    </a>
-                    {% if forloop.last %}
-                    {% elif forloop.counter|divisibleby:2 %}
-                        </div>
-                        <div class="col-lg-3 col-md-12 mb-4 mb-lg-0 min-vh-100">
-                    {% endif %}
-                {% endfor %}
+    {% if searched %}
+        {% if imagepost_list.count == 0 %}
+        <div class="row justify-content-center align-content-center" style="height: 75vh;">
+            <div class="card col-sm-11 col-md-8 mb-5 py-4 waves border-info d-flex align-items-center justify-content-center"
+                style="height: 50vh;">
+                <div class="card text-bg-danger text-center">
+                    <div class="card-body">
+                        <h1 class="rounded card-title">No results for "{{ searched }}"</h1>
+                    </div>
+                </div>
             </div>
         </div>
+        {% else %}
+        <h1 class="mx-3">You searched for "{{ searched }}"</h1>
+        <br>
+        {% endif %}
+    {% else %}
+    <h1 class="mx-3">No search entered!</h1>
+    <br>
     {% endif %}
-{% else %}
-    <h1>No search entered!</h1>
-{% endif %}
-
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link {% if page_obj.previous_page_number == 1 %} d-none {% endif %}" href="?page=1">
-                        &laquo; 1 ... </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                        {{ page_obj.previous_page_number }} </a>
-                </li>
-            {% endif %}
-
-            <li class="page-item active">
-                <a class="page-link" href="?page={{ page_obj.number }}">
-                    {{ page_obj.number }} </a>
-            </li>
-
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-                        {{ page_obj.next_page_number }} </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link {% if page_obj.next_page_number == page_obj.paginator.num_pages %} d-none {% endif %}"
-                        href="?page={{ page_obj.paginator.num_pages }}">
-                        ... {{ page_obj.paginator.num_pages }} &raquo;
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-
 </div>
 
 {% endblock %}
