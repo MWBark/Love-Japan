@@ -1,14 +1,6 @@
-{% extends "base.html" %}
+{% extends "main/error.html" %}
 
-{% block content %}
-
-<div class="row justify-content-center align-content-center" style="height: 75vh;">
-    <div class="col-8 card m-3 text-center">
-        <div class="card-body">
-            <h1 class="card-title">404 ERROR</h1>
-            <h3 class="card-subtitle mb-2 text-body-secondary">Page not found</h3>
-        </div>
-    </div>
-</div>
-
+{% block card_body %}
+<h1 class="card-title">404 ERROR</h1>
+<h3 class="card-subtitle mb-2">Page not found</h3>
 {% endblock %}

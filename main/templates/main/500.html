@@ -1,16 +1,8 @@
-{% extends "base.html" %}
+{% extends "main/error.html" %}
 
-{% block content %}
-
-<div class="row justify-content-center align-content-center" style="height: 75vh;">
-    <div class="col-8 card m-3 text-center">
-        <div class="card-body">
-            <h1 class="card-title">500 ERROR</h1>
-            <h3 class="card-subtitle mb-2 text-body-secondary">Internal Server Error</h3>
-            <p class="card-text">Try to refresh this page. If the problem persists, please use the Contact link at the
-                bottom of the page to report the problem.</p>
-        </div>
-    </div>
-</div>
-
+{% block card_body %}
+<h1 class="card-title">500 ERROR</h1>
+<h3 class="card-subtitle mb-2">Internal Server Error</h3>
+<p class="card-text">Try to refresh this page. If the problem persists, please use the Contact link at the
+    bottom of the page to report the problem.</p>
 {% endblock %}
