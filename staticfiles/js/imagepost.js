@@ -1,13 +1,15 @@
+/*jshint esversion: 6 */
+
 const commentEditButtons = document.getElementsByClassName("btn-edit");
 const commentText = document.getElementById("id_body");
 const commentForm = document.getElementById("imageCommentForm");
 const submitButton = document.getElementById("submitButton");
 
 const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
-const deleteTitle = document.getElementById("deleteModalLabel")
-const deleteBody = document.getElementById("delete-message")
+const deleteTitle = document.getElementById("deleteModalLabel");
+const deleteBody = document.getElementById("delete-message");
 const deleteCommentButtons = document.getElementsByClassName("btn-comment-delete");
-const deleteImageButton = document.getElementById("image-delete")
+const deleteImageButton = document.getElementById("image-delete");
 const deleteConfirm = document.getElementById("deleteConfirm");
 
 /**
