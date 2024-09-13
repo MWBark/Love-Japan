@@ -11,6 +11,10 @@ from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 
 
 def is_valid_image_pillow(file_name):
+    """
+    Uses pillow's 'Image' to test
+    wether a file can be opened as an image
+    """
     try:
         with Image.open(file_name) as img:
             img.verify()
@@ -266,8 +270,12 @@ def profile(request, pk):
 
     ``profile``
         An instance of :model:`main.Profile`.
-    ``profile_images``
-        All :model:`main.ImagePosts`related to profile.
+    ``approved_images``
+        All :model:`main.ImagePosts`related to profile
+        with approved status
+    ``draft_images``
+        All :model:`main.ImagePosts`related to profile
+        with draft status
     ``profile_form``
         An instance of :form:`main.ProfileForm`.
 
@@ -328,6 +336,26 @@ class ProfilePostList(generic.ListView):
 
 
 def profile_drafts(request, pk):
+    """
+    Filters :model:`main.Imagepost` by related
+    :model:`main.Profile` and draft status,
+    then paginates the imagepost_list
+
+    **Content**
+
+    ``profile``
+        Profile with the id of the pk argument
+    ``imagepost_list``
+        list of image posts filtered by uploader=profile
+        and draft status
+    ``paginator``
+        Uses Djangos Paginator to paginate
+        the imagepost_list objects by 8
+
+    **Templates**
+
+    :template:main/imagelist.html`    
+    """
 
     profile = Profile.objects.get(user_id=pk)
     if request.user == profile.user:
@@ -342,7 +370,7 @@ def profile_drafts(request, pk):
 
     return render(
         request,
-        'main/index.html',
+        'main/imagelist.html',
         {
             "imagepost_list":imagepost_list,
             "page_obj":page_obj
