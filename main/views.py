@@ -471,17 +471,48 @@ def notification_is_read(request, n_id):
 
 
 def search(request):
+    """
+    Renders a paginated list of approved :model:`main.ImagePost`
+    filtered by the inputted 'searched' string from the POST data
+
+    **Content**
+
+    ``searched``
+        string user entered into the search bar
+    ``search_slug``
+        search string converted into a slug
+    ``imagepost_list``
+        list of image posts filtered by searched term and
+        approved status
+    ``paginator``
+        Uses Djangos Paginator to paginate
+        the imagepost_list objects by 8
+
+    **Templates**
+
+    :template:`main/search.html`.
+    """
 
     if request.method == 'POST':
         searched = request.POST['searched']
         search_slug = slugify(searched)
-        imagepost_list = ImagePost.objects.filter(slug__contains=search_slug)
-        paginator = Paginator(imagepost_list, 8)  # Show 8 contacts per page.
+        imagepost_list = ImagePost.objects.filter(
+                            slug__contains=search_slug, status=1
+                            )
+        paginator = Paginator(imagepost_list, 8)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'main/search.html', {"searched":searched, "imagepost_list":imagepost_list, "page_obj": page_obj})
+    return render(
+        request,
+        'main/search.html',
+        {
+            "searched":searched,
+            "imagepost_list":imagepost_list,
+            "page_obj": page_obj
+        }
+    )
 
 
 def handler403(request, exception):
