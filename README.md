@@ -254,6 +254,8 @@ These features couldn't be implemented currently either due to a lack of technic
 
 ## Testing
 
+All testing information can be found in [TESTING.md](TESTING.md).
+
 ## Bugs
 
 ## Deployment
@@ -382,4 +384,34 @@ python-3.12.5
 
 ## Credits
 
+### Code
+
+- The main base for the project was Code Institute's "I Think Therefore I Am Blog". The following where edited, and in the case of 'About/ContactInfo' taken wholly, from the blog's models and forms:
+
+  - ImagePost
+  - ImageComment
+  - ImageCommentForm
+  - About/ContactInfo
+  - ContactMessage/ContactForm
+
+- The about and contact view.py are from Code Institute's "I Think Therefore I Am Blog" about/views.py
+
+- The comment related views in the main app are largely the same as the ones in "I Think Therefore I Am Blog", with the addition of the likes feature.
+
+- Comments in the imagepost.html are largely the same as the ones in "I Think Therefore I Am Blog" post_detail.html, again with the exception of the like feature and link to profile.
+
+- The javascript for edit and delete comment buttons, aswell the 'Delete confirmation' modal, are taken wholly from "I Think Therefore I Am Blog".
+
+- The code for creating a Profile model automatically on registration and for the 'likes' feature was taken from this playlist of videos by Codemy [here](https://www.youtube.com/watch?v=KXunlJgeRcU&list=PLCC34OHNcOtoQCR6K4RgBWNi3-7yGgg7b).
+
+- The Notifications model was taken from [StackOverflow](https://stackoverflow.com/questions/72264677/how-can-i-implement-notifications-system-in-django)
+
+### Media
+
+- Sources for the images were taken form either [pexels](https://www.pexels.com/), or for the Studio Ghibli images [ghibli.jp](https://www.ghibli.jp/works/)
+
+- The favicon and the waves background in the LoveJapan cards are taken from [Freepik](https://www.freepik.com/). The waves background from [here](https://www.freepik.com/free-vector/japanese-seamless-vector-vintage-wave-pattern_11289793.htm#query=japanese%20wave%20pattern&position=4&from_view=keyword&track=ais_hybrid&uuid=e4d14055-c374-47e0-9219-0ba8848424a6) and the icon for the favicon [here](https://www.freepik.com/icon/mount-fuji_4073583#fromView=keyword&page=1&position=35&uuid=746d70f3-2fbf-4a4a-8476-ffff5170a2a3).
+
 ## Acknowledgements
+
+- Thanks go to the tutors at Code Institute for answering any questions I had.
