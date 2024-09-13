@@ -71,7 +71,7 @@
                 {% endif %}
                 <span class="navbar-brand">
                     <a href="{% url 'notifications' %}">
-                        <i class="fa-solid fa-bell" {% if unread_notifications %} style="color: red;" {% endif %}>
+                        <i class="fa-solid fa-bell text-danger" {% if unread_notifications %}  {% endif %}>
                         </i>
                     </a>
                 </span>
