@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
-                        <h1 class="card-title">{{ profile.user.username }}</h5>
+                        <h1 class="card-title">{{ profile.user.username }}</h1>
                             <p class="card-text">
                                 {{ profile.bio }}
                             </p>
@@ -92,7 +92,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="profileImageForm" method="POST" action="" enctype="multipart/form-data">
+                <form id="profileImageForm" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ profile_form|crispy }}
                     <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
