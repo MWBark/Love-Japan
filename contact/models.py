@@ -14,6 +14,7 @@ class ContactInfo(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+
 class ContactMessage(models.Model):
     """
     Stores a single contact message.

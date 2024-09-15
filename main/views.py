@@ -51,7 +51,8 @@ def imagepost(request, slug):
     """
     queryset = ImagePost.objects.prefetch_related('tags').all()
     imagepost = get_object_or_404(queryset, slug=slug)
-    image_comments = ImageComment.objects.filter(imagepost=imagepost).order_by("-created_on")
+    image_comments = ImageComment.objects.filter(
+        imagepost=imagepost).order_by("-created_on")
 
     if request.method == "POST":
         comment_form = ImageCommentForm(data=request.POST)
@@ -60,20 +61,21 @@ def imagepost(request, slug):
             comment.author = request.user
             comment.imagepost = imagepost
             comment.save()
-            messages.success(request, ('Comment submitted and awaiting approval'))
+            messages.success(request, (
+                'Comment submitted and awaiting approval'))
             return HttpResponseRedirect(reverse('imagepost', args=[slug]))
         else:
             messages.error(request, 'Error uploading comment!')
 
     comment_form = ImageCommentForm()
-    
+
     return render(
         request,
         'main/imagepost.html',
         {
-            "imagepost":imagepost,
-            "image_comments":image_comments,
-            "comment_form":comment_form,
+            "imagepost": imagepost,
+            "image_comments": image_comments,
+            "comment_form": comment_form,
         }
     )
 
@@ -96,17 +98,23 @@ def imagepost_edit(request, slug):
 
     queryset = ImagePost.objects.prefetch_related('tags').all()
     imagepost = get_object_or_404(queryset, slug=slug)
-    upload_image_form = UploadImageForm(request.POST or None, request.FILES or None, instance=imagepost)
+    upload_image_form = UploadImageForm(
+        request.POST or None, request.FILES or None, instance=imagepost)
 
-    if request.user == imagepost.uploader:   
+    if request.user == imagepost.uploader:
         if request.method == "POST":
             if upload_image_form.is_valid():
                 new_imagepost = upload_image_form.save(commit=False)
 
                 if 'title' in upload_image_form.changed_data:
                     new_imagepost.slug = slugify(new_imagepost.title)
-                    if ImagePost.objects.filter(slug=new_imagepost.slug).exists():
-                        messages.error(request, 'Name already exists. Please choose an unique name.')
+                    if ImagePost.objects.filter(
+                            slug=new_imagepost.slug).exists():
+
+                        messages.error(
+                            request,
+                            'Name already exists. Please choose unique name.'
+                        )
                         return redirect('imagepost_edit', slug)
 
                 if 'image' in upload_image_form.changed_data:
@@ -117,15 +125,16 @@ def imagepost_edit(request, slug):
                         messages.error(request, 'Not a valid image file!')
                         return redirect('imagepost_edit', slug)
 
-                    elif (image_size / 1048576) > 20 :
+                    elif (image_size / 1048576) > 20:
                         messages.error(request, 'Image file to large!')
                         return redirect('imagepost_edit', slug)
-                
+
                 new_imagepost.uploader = request.user
                 new_imagepost.status = 0
                 new_imagepost.save()
                 upload_image_form.save_m2m()
-                messages.success(request, ("Your Image has been update and is awaiting approval."))
+                messages.success(request, (
+                    "Your Image has been update and is awaiting approval."))
                 return HttpResponseRedirect(reverse('home'))
             else:
                 messages.error(request, 'Error updating image!')
@@ -133,7 +142,16 @@ def imagepost_edit(request, slug):
         messages.error(request, "You don't have permission to edit this post!")
         return redirect('imagepost', slug)
 
-    return render(request, 'main/uploadimage.html', {"imagepost":imagepost, "upload_image_form":upload_image_form})
+    return render(
+        request,
+        'main/uploadimage.html',
+        {
+            "imagepost": imagepost,
+            "upload_image_form": upload_image_form
+
+        }
+    )
+
 
 def imagepost_delete(request, slug):
     """
@@ -155,6 +173,7 @@ def imagepost_delete(request, slug):
         messages.error(request, 'You can only delete your own Images!')
 
     return HttpResponseRedirect(reverse('home'))
+
 
 def imagepost_like(request, slug):
     """
@@ -181,7 +200,6 @@ def imagepost_like(request, slug):
     else:
         messages.error(request, 'You must be logged in to like.')
         return redirect('imagepost', slug)
-
 
 
 def comment_edit(request, slug, comment_id):
@@ -295,7 +313,8 @@ def profile(request, pk):
     profile = get_object_or_404(queryset, user_id=pk)
     approved_images = ImagePost.objects.filter(uploader=pk, status=1)
     draft_images = ImagePost.objects.filter(uploader=pk, status=0)
-    profile_form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
+    profile_form = ProfileForm(
+        request.POST or None, request.FILES or None, instance=profile)
 
     if request.method == "POST":
         if profile_form.is_valid() and profile.user == request.user:
@@ -309,7 +328,7 @@ def profile(request, pk):
                     messages.error(request, 'Not a valid image file!')
                     return redirect('profile', pk)
 
-                elif (image_size / 1048576) > 20 :
+                elif (image_size / 1048576) > 20:
                     messages.error(request, 'Image file to large!')
                     return redirect('profile', pk)
 
@@ -320,13 +339,13 @@ def profile(request, pk):
             messages.error(request, 'Error updating profile!')
 
     return render(
-        request, 
-        'main/profile.html', 
+        request,
+        'main/profile.html',
         {
-            "profile":profile, 
-            "approved_images":approved_images, 
-            "draft_images":draft_images,
-            "profile_form":profile_form
+            "profile": profile,
+            "approved_images": approved_images,
+            "draft_images": draft_images,
+            "profile_form": profile_form
         }
     )
 
@@ -341,7 +360,8 @@ class ProfilePostList(generic.ListView):
 
     def get_queryset(self):
         """return all approved ImagePosts by uploader==primary key"""
-        return ImagePost.objects.filter(uploader=self.kwargs.get('pk'), status=1)
+        return ImagePost.objects.filter(
+            uploader=self.kwargs.get('pk'), status=1)
 
 
 class ProfileDrafts(generic.ListView):
@@ -394,7 +414,7 @@ def taglist(request):
 
     tags = Tag.objects.all()
 
-    return render(request, 'main/tags.html', {"tags":tags})
+    return render(request, 'main/tags.html', {"tags": tags})
 
 
 def upload_image(request):
@@ -410,7 +430,8 @@ def upload_image(request):
 
     :template:`main/uploadimage.html.html`
     """
-    upload_image_form = UploadImageForm(request.POST or None, request.FILES or None)
+    upload_image_form = UploadImageForm(
+        request.POST or None, request.FILES or None)
 
     if request.method == "POST":
         if upload_image_form.is_valid():
@@ -418,7 +439,10 @@ def upload_image(request):
 
             imagepost.slug = slugify(imagepost.title)
             if ImagePost.objects.filter(slug=imagepost.slug).exists():
-                messages.error(request, 'Name already exists. Please choose an unique name.')
+                messages.error(
+                    request,
+                    'Name already exists. Please choose an unique name.'
+                )
                 return redirect('upload_image')
 
             my_bytesio = imagepost.image.file
@@ -428,7 +452,7 @@ def upload_image(request):
                 messages.error(request, 'Not a valid image file!')
                 return redirect('upload_image')
 
-            elif (image_size / 1048576) > 20 :
+            elif (image_size / 1048576) > 20:
                 messages.error(request, 'Image file to large!')
                 return redirect('upload_image')
 
@@ -437,11 +461,18 @@ def upload_image(request):
             upload_image_form.save_m2m()
             messages.success(request, ("Your Image is awaiting approval."))
             return HttpResponseRedirect(reverse('home'))
-            
+
         else:
             messages.error(request, 'Error uploading image!')
 
-    return render(request, 'main/uploadimage.html', {"upload_image_form":upload_image_form})
+    return render(
+        request,
+        'main/uploadimage.html',
+        {
+            "upload_image_form": upload_image_form
+        }
+    )
+
 
 def notifications(request):
     """
@@ -459,12 +490,19 @@ def notifications(request):
     :template:`main/notifications.html`.
     """
     if request.user.is_authenticated:
-        read_notifications = Notification.objects.filter(user=request.user, is_read=True).order_by('-created_on')
+        read_notifications = Notification.objects.filter(
+            user=request.user, is_read=True).order_by('-created_on')
     else:
         messages.error(request, "You must be logged in to view notifications!")
         return redirect('accounts/login')
 
-    return render(request, 'main/notifications.html', {"read_notifications":read_notifications})
+    return render(
+        request,
+        'main/notifications.html',
+        {
+            "read_notifications": read_notifications
+        }
+    )
 
 
 def notification_is_read(request, n_id):
@@ -474,7 +512,7 @@ def notification_is_read(request, n_id):
     **Content**
 
     ``notification``
-        instance of :model:`main.Notification` 
+        instance of :model:`main.Notification`
     """
     queryset = Notification.objects.filter(is_read=False)
     notification = get_object_or_404(queryset, pk=n_id)
@@ -523,8 +561,8 @@ def search(request):
         request,
         'main/search.html',
         {
-            "searched":searched,
-            "imagepost_list":imagepost_list,
+            "searched": searched,
+            "imagepost_list": imagepost_list,
         }
     )
 
@@ -542,7 +580,3 @@ def handler404(request, exception):
 def handler500(request):
     """Render custom :template:`main/500.html` for 500 error"""
     return render(request, 'main/500.html', status=500)
-
-
-
-        

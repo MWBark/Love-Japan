@@ -32,11 +32,22 @@ def contact(request):
             if request.user.is_authenticated:
                 contact.username = request.user.username
             contact.save()
-            messages.success(request, ("Message sent! We'll get back to you ASAP."))
+            messages.success(
+                request,
+                ("Message sent! We'll get back to you ASAP.")
+            )
             return HttpResponseRedirect(reverse('contact'))
         else:
             messages.error(request, 'Error sending message!')
 
     contact_form = ContactForm()
 
-    return render(request, "contact/contact.html", {"contact_info": contact_info, "contact_form":contact_form})
+    return render(
+        request,
+        "contact/contact.html",
+        {
+            "contact_info": contact_info,
+            "contact_form": contact_form
+
+        }
+    )

@@ -4,7 +4,7 @@ from .models import Profile, ImagePost, ImageComment
 
 class ProfileForm(forms.ModelForm):
     """
-    Form class for users update Profile.  
+    Form class for users update Profile.
     """
     class Meta:
         model = Profile
@@ -13,7 +13,7 @@ class ProfileForm(forms.ModelForm):
 
 class UploadImageForm(forms.ModelForm):
     """
-    Form class for users to upload an ImagePost.  
+    Form class for users to upload an ImagePost.
     """
     class Meta:
         model = ImagePost
@@ -22,7 +22,7 @@ class UploadImageForm(forms.ModelForm):
 
 class ImageCommentForm(forms.ModelForm):
     """
-    Form class for users to comment on a post.  
+    Form class for users to comment on a post.
     """
     class Meta:
         model = ImageComment

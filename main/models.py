@@ -6,7 +6,7 @@ from taggit.managers import TaggableManager
 
 STATUS = ((0, "Draft"), (1, "Approved"))
 
-# Create your models here.
+
 class Profile(models.Model):
     """
     Extends the :model: `auth.user`
@@ -18,7 +18,7 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-    
+
 def create_profile(sender, instance, created, **kwargs):
     if created:
         user_profile = Profile(user=instance)
@@ -70,7 +70,8 @@ class ImageComment(models.Model):
     body = models.TextField()
     status = models.IntegerField(choices=STATUS, default=0)
     created_on = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name="image_comment_like", blank=True)
+    likes = models.ManyToManyField(
+        User, related_name="image_comment_like", blank=True)
 
     # Count likes
     def number_of_likes(self):
@@ -82,7 +83,7 @@ class ImageComment(models.Model):
     def __str__(self):
         return f"Comment {self.body} by {self.author}"
 
-    
+
 class Notification(models.Model):
     """
     Stores a single notification related to :model: `auth.User`.
