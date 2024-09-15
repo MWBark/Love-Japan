@@ -102,6 +102,12 @@ def imagepost_edit(request, slug):
             if upload_image_form.is_valid():
                 new_imagepost = upload_image_form.save(commit=False)
 
+                if 'title' in upload_image_form.changed_data:
+                    new_imagepost.slug = slugify(new_imagepost.title)
+                    if ImagePost.objects.filter(slug=new_imagepost.slug).exists():
+                        messages.error(request, 'Name already exists. Please choose an unique name.')
+                        return redirect('imagepost_edit', slug)
+
                 if 'image' in upload_image_form.changed_data:
                     my_bytesio = new_imagepost.image.file
                     image_size = my_bytesio.getbuffer().nbytes
@@ -115,7 +121,6 @@ def imagepost_edit(request, slug):
                         return redirect('imagepost_edit', slug)
                 
                 new_imagepost.uploader = request.user
-                new_imagepost.slug = slugify(imagepost.title)
                 new_imagepost.status = 0
                 new_imagepost.save()
                 upload_image_form.save_m2m()
@@ -433,6 +438,12 @@ def upload_image(request):
     if request.method == "POST":
         if upload_image_form.is_valid():
             imagepost = upload_image_form.save(commit=False)
+
+            imagepost.slug = slugify(imagepost.title)
+            if ImagePost.objects.filter(slug=imagepost.slug).exists():
+                messages.error(request, 'Name already exists. Please choose an unique name.')
+                return redirect('upload_image')
+
             my_bytesio = imagepost.image.file
             image_size = my_bytesio.getbuffer().nbytes
 
@@ -445,7 +456,6 @@ def upload_image(request):
                 return redirect('upload_image')
 
             imagepost.uploader = request.user
-            imagepost.slug = slugify(imagepost.title)
             imagepost.save()
             upload_image_form.save_m2m()
             messages.success(request, ("Your Image is awaiting approval."))
