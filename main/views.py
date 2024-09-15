@@ -491,7 +491,7 @@ def notification_is_read(request, n_id):
 
 def search(request):
     """
-    Renders a paginated list of approved :model:`main.ImagePost`
+    Renders a  list of approved :model:`main.ImagePost`
     filtered by the inputted 'searched' string from the POST data
 
     **Content**
@@ -503,9 +503,6 @@ def search(request):
     ``imagepost_list``
         list of image posts filtered by searched term and
         approved status
-    ``paginator``
-        Uses Djangos Paginator to paginate
-        the imagepost_list objects by 8
 
     **Templates**
 
@@ -518,10 +515,9 @@ def search(request):
         imagepost_list = ImagePost.objects.filter(
                             slug__contains=search_slug, status=1
                             )
-        paginator = Paginator(imagepost_list, 8)
-
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    else:
+        messages.error(request, 'Please enter a search in the search bar.')
+        return redirect('home')
 
     return render(
         request,
@@ -529,7 +525,6 @@ def search(request):
         {
             "searched":searched,
             "imagepost_list":imagepost_list,
-            "page_obj": page_obj
         }
     )
 
