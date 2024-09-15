@@ -44,6 +44,10 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Header & Navigation**
 
+![navbar](documentation/desktop-nav.png)
+
+![navbar](documentation/mobile-nav.png)
+
 - Contains the site name and logo that redirects the user back to the home page.
 
 - Link to the 'Tags' page containing a list of tags related to image posts.
@@ -66,6 +70,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Alerts**
 
+![Alert](documentation/alert-unlikeimage.png)
+
 - Utilises django's messages framework as [bootstrap alerts](https://getbootstrap.com/docs/5.3/components/alerts/#examples).
 
 - Alerts are triggered by various events (login, logout, successful image upload etc.) to inform the user.
@@ -76,6 +82,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Footer**
 
+![footer](documentation/footer.png)
+
 - Link to the about page of the website.
 
 - Link for quick access to the contact page of the website.
@@ -83,6 +91,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 - Consistent in style with the navbar
 
 **Home Page**
+
+![Home page](documentation/home.png)
 
 - A 'Love Japan Card', that can be seen on various pages of the website, acts as a banner giving a brief description of the websites purpose to new visiting users.
 
@@ -100,6 +110,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Image Post Page**
 
+![Image card](documentation/imagecard.png)
+
 - An uploaded image, resized to fit up to 80% of the screen height and 85% of the screen width.
 
 - The image can be clicked upon to launch a fullscreen modal of the image, where the image can be click on again to exit the modal.
@@ -112,6 +124,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
   - A message written by the uploader. Messages aren't required though, so there may not be one.
   - A list of tags, created by the uploader, deemed relevent to the image.
   - A 'Created on' date.
+
+![Comments section](documentation/comments.png)
 
 - 'Comments' section where individual comments are listed. Comments contain:
 
@@ -130,6 +144,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Upload Page**
 
+![Upload page](documentation/upload.png)
+
 - Upload image form that contains:
  
   - Title field for image title.
@@ -139,6 +155,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
   - Blue styled submit button
 
 **Profile Page**
+
+![Profile card](documentation/profile-card.png)
 
 - A user's profile page is created automatically upon successful account registraion.
 
@@ -158,6 +176,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
   - Optional 'Bio' text field for profile bio.
   - Blue styled submit button.
 
+![Profile image list](documentation/profile-collection.png)
+
 - Profile image list showing up to six of the profile user's latest image posts. If the number of posts is six or greater, a 'show all' link appears linking to the related 'Profile Posts' page.
 
 - If the current user is the same as the profile user, there is a list of draft images available for only them to see. If the number of draft posts is six or greater, a 'show all' link appears linking to the related 'Draft Posts' page.
@@ -169,6 +189,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 - Draft posts page is only available to the associated user and only shows their draft status posts. The same imagelist.html template is useed again.
 
 **Register/Login/Logout**
+
+![Sign in page](documentation/signin.png)
 
 - The three 'account' pages come from [django-allauth's](https://allauth.org/) account templates.
 
@@ -191,6 +213,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Notifications Page**
 
+![notifications page](documentation/notifications.png)
+
 - Shows messages sent by admin to user. Notification messages contain:
 
   - The message written by admin.
@@ -200,6 +224,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 - If no notifications have been received a LoveJapan card with the message 'No messages received' will be shown.
 
 **Tags Page**
+
+![Tags page](documentation/tags.png)
 
 - List of tags created by registered user is shown.
 
@@ -211,7 +237,15 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 - Uses the imagelist.html as it's template and filter's images by the clicked on tag name.
 
+**Search**
+
+![Search page](documentation/search.png)
+
+- Users can search images by there title using the search bar
+
 **About and Contact Pages**
+
+![Contact page](documentation/contact.png)
 
 - Both pages are created by the admin using identical forms. The forms contain:
 
@@ -231,6 +265,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 **Admin**
 
+![Admin page](documentation/admin.png)
+
 - Admin panel has full CRUD functionality over the site's content. The important abilties the the admin staff possess in the running of the site are:
 
   - Changing the status of image posts and comments to 'Approved' (1) or 'Draft' (0).
@@ -238,6 +274,8 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
   - Read contact messages
 
 **403, 404 & 500 pages**
+
+![404 error card](documentation/error-card.png)
 
 - Customised templates have been created for each of these errors. Each template extends the base.html and shows its custom title and message in a LoveJapan card.
 
@@ -248,15 +286,25 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 - Multiple notification 'Mark as read' form submission
 - Ability to approve tags
 - Users can order images (most likes, created on, most comments etc.) and choose between ascending and descending order.
-- Plus many more features and style improvements
+- Plus many more features and many style improvements
 
-These features couldn't be implemented currently either due to a lack of technical knowledge or time.
+These features couldn't be implemented currently either due to a lack of technical knowledge or mostly because time.
 
 ## Testing
 
 All testing information can be found in [TESTING.md](TESTING.md).
 
 ## Bugs
+
+### Fixed
+
+- Fix error in gunicorn name [here](https://github.com/MWBark/Love-Japan/commit/256824b1dcc74899dce0e1f66fb532448449837a)
+
+### Remaining
+
+- Because of the problems with page performance stated in the lighthouse section of TESTING.md, and also the masonary script on home page, the images on the home page can overlay one another. A page refresh usually helps.
+
+![Home page images error](documentation/error-page-load.png)
 
 ## Deployment
 
@@ -403,6 +451,8 @@ python-3.12.5
 - The javascript for edit and delete comment buttons, aswell the 'Delete confirmation' modal, are taken wholly from "I Think Therefore I Am Blog".
 
 - The code for creating a Profile model automatically on registration and for the 'likes' feature was taken from this playlist of videos by Codemy [here](https://www.youtube.com/watch?v=KXunlJgeRcU&list=PLCC34OHNcOtoQCR6K4RgBWNi3-7yGgg7b).
+
+- The search function was from from [this](https://www.youtube.com/watch?v=AGtae4L5BbI) Codemy.com tutorial
 
 - The Notifications model was taken from [StackOverflow](https://stackoverflow.com/questions/72264677/how-can-i-implement-notifications-system-in-django)
 

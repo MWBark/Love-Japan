@@ -188,6 +188,19 @@ Python files were tested using the [CI Python Linter](https://pep8ci.herokuapp.c
 
 ### Lighthouse
 
+<details>
+<summary>Profile lighthouse results</summary>
+
+![Profile page lighthouse score](documentation/lighthouse-profile.png)
+
+</details>
+
+<br>
+
+I unfortunately didn't have time to solve the problems with the Performance on the lighthouse results. The problem could have be resolved by creating another Cloudinary field in the models, named 'gallery' or 'thumbnail', that create a copy of the upload image and resizes it for better performance.
+
+The Bad Practice results are from the cloudinary urls not being secure. I believe I would have to get a paid plan with cloudinary to upgrade them to HTTPS.
+
 ### Responsivness
 
 All webpages are responsive with the [Boostrap grid](https://getbootstrap.com/docs/5.3/layout/grid/) layout. The breakpoints of col-sm, col-md and col-lg where used respectivley for mobile, tablet and laptop screens
