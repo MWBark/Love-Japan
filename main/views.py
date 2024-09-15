@@ -1,6 +1,7 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.utils.text import slugify
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -335,56 +336,32 @@ class ProfilePostList(generic.ListView):
     Uses django's generic.Listview to filter approved imageposts
     related to a user profile and to paginate posts by 8 per page.
     """
-    queryset = ImagePost.objects.filter(status=1)
     template_name = "main/imagelist.html"
-    paginate_by = 8
+    paginate_by = 6
 
     def get_queryset(self):
-        """return all ImagePosts by uploader==primary key"""
+        """return all approved ImagePosts by uploader==primary key"""
         return ImagePost.objects.filter(uploader=self.kwargs.get('pk'), status=1)
 
 
-def profile_drafts(request, pk):
+class ProfileDrafts(generic.ListView):
     """
-    Filters :model:`main.Imagepost` by related
-    :model:`main.Profile` and draft status,
-    then paginates the imagepost_list
-
-    **Content**
-
-    ``profile``
-        Profile with the id of the pk argument
-    ``imagepost_list``
-        list of image posts filtered by uploader=profile
-        and draft status
-    ``paginator``
-        Uses Djangos Paginator to paginate
-        the imagepost_list objects by 8
-
-    **Templates**
-
-    :template:main/imagelist.html`    
+    Uses django's generic.Listview to filter draft imageposts
+    related to a user profile and to paginate posts by 8 per page.
     """
+    template_name = "main/imagelist.html"
+    paginate_by = 6
 
-    profile = Profile.objects.get(user_id=pk)
-    if request.user == profile.user:
-        imagepost_list = ImagePost.objects.filter(uploader=profile.user, status=0)
-
-        paginator = Paginator(imagepost_list, 8)  # Show 8 images per page.
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-    else:
-        messages.error(request, "You don't have permission to view this page")
-        return redirect('home')
-
-    return render(
-        request,
-        'main/imagelist.html',
-        {
-            "imagepost_list":imagepost_list,
-            "page_obj":page_obj
-        }
-    )
+    def get_queryset(self):
+        """
+        return all draft ImagePosts by uploader==primary key
+        if request.user == profile.user
+        """
+        profile = Profile.objects.get(user_id=self.kwargs.get('pk'))
+        if self.request.user == profile.user:
+            return ImagePost.objects.filter(uploader=profile.user, status=0)
+        else:
+            raise PermissionDenied()
 
 
 class TagPostList(generic.ListView):
