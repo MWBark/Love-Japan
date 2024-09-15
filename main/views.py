@@ -13,7 +13,7 @@ from .forms import ProfileForm, UploadImageForm, ImageCommentForm
 def is_valid_image_pillow(file_name):
     """
     Uses pillow's 'Image' to test
-    wether a file can be opened as an image
+    whether a file can be opened as an image
     """
     try:
         with Image.open(file_name) as img:
@@ -101,16 +101,18 @@ def imagepost_edit(request, slug):
         if request.method == "POST":
             if upload_image_form.is_valid():
                 new_imagepost = upload_image_form.save(commit=False)
-                my_bytesio = new_imagepost.image.file
-                image_size = my_bytesio.getbuffer().nbytes
 
-                if not is_valid_image_pillow(new_imagepost.image):
-                    messages.error(request, 'Not a valid image file!')
-                    return redirect('imagepost_edit', slug)
+                if 'image' in upload_image_form.changed_data:
+                    my_bytesio = new_imagepost.image.file
+                    image_size = my_bytesio.getbuffer().nbytes
 
-                elif (image_size / 1048576) > 20 :
-                    messages.error(request, 'Image file to large!')
-                    return redirect('imagepost_edit', slug)
+                    if not is_valid_image_pillow(new_imagepost.image):
+                        messages.error(request, 'Not a valid image file!')
+                        return redirect('imagepost_edit', slug)
+
+                    elif (image_size / 1048576) > 20 :
+                        messages.error(request, 'Image file to large!')
+                        return redirect('imagepost_edit', slug)
                 
                 new_imagepost.uploader = request.user
                 new_imagepost.slug = slugify(imagepost.title)
@@ -292,16 +294,18 @@ def profile(request, pk):
     if request.method == "POST":
         if profile_form.is_valid() and profile.user == request.user:
             new_profile = profile_form.save(commit=False)
-            my_bytesio = new_profile.image.file
-            image_size = my_bytesio.getbuffer().nbytes
 
-            if not is_valid_image_pillow(new_profile.image):
-                messages.error(request, 'Not a valid image file!')
-                return redirect('profile', pk)
+            if 'image' in profile_form.changed_data:
+                my_bytesio = new_profile.image.file
+                image_size = my_bytesio.getbuffer().nbytes
 
-            elif (image_size / 1048576) > 20 :
-                messages.error(request, 'Image file to large!')
-                return redirect('profile', pk)
+                if not is_valid_image_pillow(new_profile.image):
+                    messages.error(request, 'Not a valid image file!')
+                    return redirect('profile', pk)
+
+                elif (image_size / 1048576) > 20 :
+                    messages.error(request, 'Image file to large!')
+                    return redirect('profile', pk)
 
             new_profile.save()
             messages.success(request, ("Your Profile Has Been Updated!"))
