@@ -96,6 +96,96 @@ the undefined variable of 'bootstrap' is caused by cross referencing scripts
 
 ### Python
 
+Python files were tested using the [CI Python Linter](https://pep8ci.herokuapp.com/)
+
+<details>
+
+<summary>Screenshots with results for all the python files edited by me</summary>
+
+<br>
+
+**About**
+
+- Admin
+
+![about/admin.py results](documentation/python-about-admin.png)
+
+- Models
+
+![about/models.py results](documentation/python-about-models.png)
+
+- URLs
+
+![about/urls.py results](documentation/python-about-urls.png)
+
+- Views
+
+![about/views.py results](documentation/python-about-views.png)
+
+<br>
+
+**CONTACT**
+
+- Admin
+
+![contact/admin.py results](documentation/python-contact-admin.png)
+
+- Forms
+
+![contact/forms.py results](documentation/python-contact-forms.png)
+
+- Models
+
+![contact/models.py results](documentation/python-contact-models.png)
+
+- URLs
+
+![contact/urls.py results](documentation/python-contact-urls.png)
+
+- Views
+
+![contact/views.py results](documentation/python-contact-views.png)
+
+<br>
+
+**MAIN**
+
+- Admin
+
+![main/admin.py results](documentation/python-main-admin.png)
+
+- Context Processor
+
+![main/context_processor.py results](documentation/python-main-context.png)
+
+- Forms
+
+![main/forms.py results](documentation/python-main-forms.png)
+
+- Models
+
+![main/models.py results](documentation/python-main-models.png)
+
+- Test Forms
+
+![main/test_forms.py results](documentation/python-main-testforms.png)
+
+- Test Views
+
+![main/test_views.py results](documentation/python-main-testviews.png)
+
+- URLs
+
+![main/urls.py results](documentation/python-main-urls.png)
+
+- Views
+
+![main/views.py results](documentation/python-main-views.png)
+
+<br>
+
+</details>
+
 ### Lighthouse
 
 ### Responsivness
@@ -302,4 +392,4 @@ I have tested the website in Chrome, Firefox and Edge
 
 ### Automated Testing
 
-- An attempt was made at automated testing, but due to a lack of time only a very limit number of automated test were carried out.
+- An attempt was made at automated testing, but due to a lack of time only a very limit number of automated tests were carried out.
