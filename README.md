@@ -205,7 +205,7 @@ The issues from the sprint were then added to a 'LoveJapan Sprint #' Project boa
 
 - Tags are styled with the LoveJapan card theme.
 
-- When the tag name is clicked upon
+- Navigates to specific list of tags when specific tag is clicked.
 
 **Tag Posts Page**
 
